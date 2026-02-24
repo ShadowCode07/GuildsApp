@@ -52,3 +52,50 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Visual Studio / .NET
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build folders
+bin/
+obj/
+out/
+
+# Rider IDE
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# NuGet packages
+*.nupkg
+packages/
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# ASP.NET / MVC
+appsettings.*.json          # local configs with secrets (keep appsettings.json.sample if you want)
+wwwroot/lib/                # client libraries (optional if restored via LibMan or npm)
+
+# Logs
+*.log
+Logs/
+LogFiles/
+
+# Database / SQL
+*.mdf
+*.ldf
+*.bak
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# User secrets
+secrets.json
