@@ -1,5 +1,8 @@
-﻿namespace GuidlsMVC.Entities
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace GuidlsMVC.Entities
 {
+    [Table("Post")]
     public class Post : Base
     {
         public string Content { get; set; } = string.Empty;
