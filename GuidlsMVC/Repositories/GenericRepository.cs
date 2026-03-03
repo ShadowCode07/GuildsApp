@@ -32,19 +32,20 @@ namespace GuidlsMVC.Repositories
         private SqlConnection CreateConnection()
             => new SqlConnection(_connectionString);
 
-        public async Task<int> Create(T entity)
+        public async Task<int> CreateAsync(T entity)
         {
             using var conn = CreateConnection();
 
             var collumns = string.Join(", ", _properties.Select(p => p.Name));
             var values = string.Join(", ", _properties.Select(p => "@" + p.Name));
 
-            var sql = $"INSERT INTO {_tableName} ({collumns}) VALUES ({values})";
+            var sql = $"INSERT INTO {_tableName} ({collumns}) VALUES ({values})" +
+                $"SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
             return await conn.ExecuteScalarAsync<int>(sql, entity);
         }
 
-        public async Task<bool> Delete(int id)
+        public async Task<bool> DeleteAsync(int id)
         {
             using var conn = CreateConnection();
             var sql = $"DELETE FROM ${_tableName} WHERE Id = @Id";
@@ -71,7 +72,7 @@ namespace GuidlsMVC.Repositories
             return result;
         }
 
-        public async Task<bool> Update(T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
             using var conn = CreateConnection();
 

@@ -10,7 +10,7 @@ namespace GuidlsMVC
 
             var builder = WebApplication.CreateBuilder(args);
 
-            //builder.Services.AddScoped<IGenericRepository, GenericRepository>();
+            //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IPostRepository, PostRepository>();
 
             // Add services to the container.
