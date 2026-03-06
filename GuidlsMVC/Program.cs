@@ -1,5 +1,5 @@
-using GuidlsMVC.Interfaces.Repositories;
-using GuidlsMVC.Repositories;
+using GuildsApp.Application.Interfaces.Repository;
+using GuildsApp.Infrastructure;
 
 namespace GuidlsMVC
 {

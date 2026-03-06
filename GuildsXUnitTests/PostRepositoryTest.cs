@@ -1,5 +1,5 @@
-﻿using GuidlsMVC.Entities;
-using GuidlsMVC.Repositories;
+﻿using GuildsApp.Infrastructure;
+using GuildsAPP.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

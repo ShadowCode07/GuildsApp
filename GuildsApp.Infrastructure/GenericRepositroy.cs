@@ -1,12 +1,18 @@
-﻿using Dapper;
-using GuidlsMVC.Entities;
-using GuidlsMVC.Interfaces.Repositories;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Azure.Core;
+using Dapper;
+using GuildsApp.Application.Interfaces.Repository;
+using GuildsApp.Core.Models;
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace GuidlsMVC.Repositories
+namespace GuildsApp.Infrastructure
 {
     public abstract class GenericRepository<T> : IGenericRepository<T>
         where T : Base
@@ -14,6 +20,16 @@ namespace GuidlsMVC.Repositories
         private readonly string _connectionString;
         private readonly string _tableName;
         private readonly PropertyInfo[] _properties;
+
+        private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyCache = new();
+
+        private static PropertyInfo[] GetPropertis()
+        {
+           return PropertyCache.GetOrAdd(typeof(T), t =>
+                t.GetProperties()
+                    .Where(p => p.Name != nameof(Base.Id))
+                    .ToArray());
+        }
 
         public GenericRepository(IConfiguration config)
         {
@@ -23,10 +39,7 @@ namespace GuidlsMVC.Repositories
             var tableAttribute = typeof(T).GetCustomAttribute<TableAttribute>();
             _tableName = tableAttribute?.Name ?? throw new Exception($"Missing Table attribute on {typeof(T).Name}");
 
-            _properties = typeof(T)
-                .GetProperties()
-                .Where(p => p.Name != nameof(Base.Id))
-                .ToArray();
+            _properties = GetPropertis();
         }
 
         private SqlConnection CreateConnection()
@@ -36,10 +49,10 @@ namespace GuidlsMVC.Repositories
         {
             using var conn = CreateConnection();
 
-            var collumns = string.Join(", ", _properties.Select(p => p.Name));
+            var columns = string.Join(", ", _properties.Select(p => p.Name));
             var values = string.Join(", ", _properties.Select(p => "@" + p.Name));
 
-            var sql = $"INSERT INTO {_tableName} ({collumns}) VALUES ({values})" +
+            var sql = $"INSERT INTO {_tableName} ({columns}) VALUES ({values})" +
                 $"SELECT CAST(SCOPE_IDENTITY() AS INT)";
 
             return await conn.ExecuteScalarAsync<int>(sql, entity);
@@ -50,7 +63,7 @@ namespace GuidlsMVC.Repositories
             using var conn = CreateConnection();
             var sql = $"DELETE FROM ${_tableName} WHERE Id = @Id";
 
-            var rows = await conn.ExecuteAsync(sql, new {Id = id});
+            var rows = await conn.ExecuteAsync(sql, new { Id = id });
             return rows > 0;
         }
 
