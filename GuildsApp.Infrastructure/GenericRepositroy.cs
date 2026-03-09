@@ -18,8 +18,8 @@ namespace GuildsApp.Infrastructure
         where T : Base
     {
         private readonly string _connectionString;
-        private readonly string _tableName;
-        private readonly PropertyInfo[] _properties;
+        protected readonly string _tableName;
+        protected readonly PropertyInfo[] _properties;
 
         private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyCache = new();
 
@@ -42,7 +42,7 @@ namespace GuildsApp.Infrastructure
             _properties = GetPropertis();
         }
 
-        private SqlConnection CreateConnection()
+        protected SqlConnection CreateConnection()
             => new SqlConnection(_connectionString);
 
         public async Task<int> CreateAsync(T entity)
@@ -52,8 +52,8 @@ namespace GuildsApp.Infrastructure
             var columns = string.Join(", ", _properties.Select(p => p.Name));
             var values = string.Join(", ", _properties.Select(p => "@" + p.Name));
 
-            var sql = $"INSERT INTO {_tableName} ({columns}) VALUES ({values})" +
-                $"SELECT CAST(SCOPE_IDENTITY() AS INT)";
+            var sql = $"INSERT INTO [{_tableName}] ({columns}) VALUES ({values}); " +
+          $"SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             return await conn.ExecuteScalarAsync<int>(sql, entity);
         }
@@ -61,7 +61,7 @@ namespace GuildsApp.Infrastructure
         public async Task<bool> DeleteAsync(int id)
         {
             using var conn = CreateConnection();
-            var sql = $"DELETE FROM ${_tableName} WHERE Id = @Id";
+            var sql = $"DELETE FROM [{_tableName}] WHERE Id = @Id";
 
             var rows = await conn.ExecuteAsync(sql, new { Id = id });
             return rows > 0;
@@ -70,7 +70,7 @@ namespace GuildsApp.Infrastructure
         public async Task<IReadOnlyList<T>?> GetAllAsync()
         {
             using var conn = CreateConnection();
-            var sql = $"SELECT * FROM {_tableName}";
+            var sql = $"SELECT * FROM [{_tableName}]";
 
             var result = await conn.QueryAsync<T>(sql);
             return result.ToList();
@@ -79,7 +79,7 @@ namespace GuildsApp.Infrastructure
         public async Task<T?> GetByIdAsync(int id)
         {
             using var conn = CreateConnection();
-            var sql = $"SELECT * FROM {_tableName} WHERE Id = @Id";
+            var sql = $"SELECT * FROM [{_tableName}] WHERE Id = @Id";
 
             var result = await conn.QueryFirstOrDefaultAsync<T>(sql, new { Id = id });
             return result;
@@ -92,7 +92,7 @@ namespace GuildsApp.Infrastructure
             var setClause = string.Join(", ",
                 _properties.Select(p => $"{p.Name} = @{p.Name}"));
 
-            var sql = $"UPDATE {_tableName} SET {setClause} WHERE Id = @Id";
+            var sql = $"UPDATE [{_tableName}] SET {setClause} WHERE Id = @Id";
 
             var rows = await conn.ExecuteAsync(sql, entity);
             return rows > 0;

@@ -1,5 +1,7 @@
 using GuildsApp.Application.Interfaces.Repository;
+using GuildsApp.Application.Interfaces.Security;
 using GuildsApp.Infrastructure;
+using GuildsApp.Infrastructure.Security;
 
 namespace GuidlsMVC
 {
@@ -12,9 +14,20 @@ namespace GuidlsMVC
 
             //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-            // Add services to the container.
+            builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
             builder.Services.AddControllersWithViews();
+
+            builder.Services
+                .AddAuthentication("AuthCookie")
+                .AddCookie("AuthCookie", options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.AccessDeniedPath = "/Account/Denied";
+                    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                });
 
             var app = builder.Build();
 
@@ -31,6 +44,7 @@ namespace GuidlsMVC
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
