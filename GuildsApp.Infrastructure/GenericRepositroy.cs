@@ -49,7 +49,7 @@ namespace GuildsApp.Infrastructure
         {
             using var conn = CreateConnection();
 
-            var columns = string.Join(", ", _properties.Select(p => p.Name));
+            var columns = string.Join(", ", _properties.Select(p => "[" + p.Name + "]"));
             var values = string.Join(", ", _properties.Select(p => "@" + p.Name));
 
             var sql = $"INSERT INTO [{_tableName}] ({columns}) VALUES ({values}); " +
@@ -90,7 +90,7 @@ namespace GuildsApp.Infrastructure
             using var conn = CreateConnection();
 
             var setClause = string.Join(", ",
-                _properties.Select(p => $"{p.Name} = @{p.Name}"));
+                _properties.Select(p => $"[{p.Name}] = @{p.Name}"));
 
             var sql = $"UPDATE [{_tableName}] SET {setClause} WHERE Id = @Id";
 
