@@ -1,16 +1,10 @@
-﻿using Azure.Core;
-using Dapper;
+﻿using Dapper;
 using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Core.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GuildsApp.Infrastructure
 {

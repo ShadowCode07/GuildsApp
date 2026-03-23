@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Microsoft.Identity.Client;
 using GuildsApp.Core.Models;
 
 namespace GuidlsApp.MVC.Controllers

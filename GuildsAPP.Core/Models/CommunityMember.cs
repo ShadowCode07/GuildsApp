@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GuildsApp.Core.Models
+﻿namespace GuildsApp.Core.Models
 {
     [Table("CommunityMember")]
     public class CommunityMember

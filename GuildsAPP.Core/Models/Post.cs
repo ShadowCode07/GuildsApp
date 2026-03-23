@@ -1,10 +1,5 @@
 ﻿using GuildsApp.Core;
 using GuildsApp.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace GuildsAPP.Core.Models
 {
@@ -16,5 +11,6 @@ namespace GuildsAPP.Core.Models
         public string Title { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
         public bool IsDeleted { get; set; }
-
+        public int Score { get; set; }
     }
+}

@@ -13,8 +13,14 @@ namespace GuidlsMVC
             var builder = WebApplication.CreateBuilder(args);
 
             //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+            builder.Services.AddScoped<ICommentRepository, CommentRepository>();
+            builder.Services.AddScoped<ICommunityMemberRepository, CommunityMemberRepository>();
+            builder.Services.AddScoped<ICommunityRepository, CommunityRepository>();
             builder.Services.AddScoped<IPostRepository, PostRepository>();
+            builder.Services.AddScoped<IPostVoteRepository, PostVoteRepository>();
+            builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+
 
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 

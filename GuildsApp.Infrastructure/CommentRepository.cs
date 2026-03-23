@@ -2,7 +2,6 @@
 using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Core.Models;
 using Microsoft.Extensions.Configuration;
-using System.Runtime.CompilerServices;
 
 namespace GuildsApp.Infrastructure
 {
