@@ -1,0 +1,13 @@
+﻿using GuildsApp.Core.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace GuildsApp.Application.Interfaces.Repository
+{
+    public interface ICommunityRepository : IGenericRepository<Community>
+    {
+    }
+}

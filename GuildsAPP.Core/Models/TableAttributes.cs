@@ -10,10 +10,12 @@ namespace GuildsApp.Core.Models
     public class TableAttribute : Attribute
     {
         public string Name { get; }
+        public string PrimaryKey { get; }
 
-        public TableAttribute(string name)
+        public TableAttribute(string name, string primaryKey = "Id")
         {
             Name = name;
+            PrimaryKey = primaryKey;
         }
     }
 }
