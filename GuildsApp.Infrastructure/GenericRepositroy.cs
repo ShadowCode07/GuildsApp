@@ -58,7 +58,7 @@ namespace GuildsApp.Infrastructure
             return await conn.ExecuteScalarAsync<int>(sql, entity);
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async virtual Task<bool> DeleteAsync(int id)
         {
             using var conn = CreateConnection();
             var sql = $"DELETE FROM [{_tableName}] WHERE Id = @Id";
@@ -67,7 +67,7 @@ namespace GuildsApp.Infrastructure
             return rows > 0;
         }
 
-        public async Task<IReadOnlyList<T>?> GetAllAsync()
+        public async virtual Task<IReadOnlyList<T>?> GetAllAsync()
         {
             using var conn = CreateConnection();
             var sql = $"SELECT * FROM [{_tableName}]";
