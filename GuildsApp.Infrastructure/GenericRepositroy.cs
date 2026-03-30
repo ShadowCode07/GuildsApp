@@ -17,7 +17,7 @@ namespace GuildsApp.Infrastructure
 
         private static readonly ConcurrentDictionary<Type, PropertyInfo[]> PropertyCache = new();
 
-        private static PropertyInfo[] GetPropertis()
+        private static PropertyInfo[] GetProperties()
         {
            return PropertyCache.GetOrAdd(typeof(T), t =>
                 t.GetProperties()
@@ -33,7 +33,7 @@ namespace GuildsApp.Infrastructure
             var tableAttribute = typeof(T).GetCustomAttribute<TableAttribute>();
             _tableName = tableAttribute?.Name ?? throw new Exception($"Missing Table attribute on {typeof(T).Name}");
 
-            _properties = GetPropertis();
+            _properties = GetProperties();
         }
 
         protected SqlConnection CreateConnection()

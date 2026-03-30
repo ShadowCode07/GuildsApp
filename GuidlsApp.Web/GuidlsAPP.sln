@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.14.36623.8
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuidlsApp.MVC", "GuidlsApp.MVC.csproj", "{4A1509C1-892E-4D7A-9CCE-61E0E3096486}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GuidlsApp.Web", "GuidlsApp.Web.csproj", "{4A1509C1-892E-4D7A-9CCE-61E0E3096486}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E75D2ABE-1108-49E7-808D-D64C99F9C00B} = {E75D2ABE-1108-49E7-808D-D64C99F9C00B}
 	EndProjectSection

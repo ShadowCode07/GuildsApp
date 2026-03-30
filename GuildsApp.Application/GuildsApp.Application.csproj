@@ -10,4 +10,8 @@
     <ProjectReference Include="..\GuildsAPP.Core\GuildsApp.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Interfaces\" />
+  </ItemGroup>
+
 </Project>

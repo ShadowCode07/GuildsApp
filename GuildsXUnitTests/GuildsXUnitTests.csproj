@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GuidlsMVC\GuidlsApp.MVC.csproj" />
+    <ProjectReference Include="..\GuidlsMVC\GuidlsApp.Web.csproj" />
     <ProjectReference Include="..\GuildsApp.Infrastructure\GuildsApp.Infrastructure.csproj" />
   </ItemGroup>
 

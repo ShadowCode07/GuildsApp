@@ -6,10 +6,10 @@
         public string Username { get; set; } = null!;
         public string DisplayName { get; set; } = null!;
         public string PasswordHash { get; set; } = null!;
-        public DateTime CreatedAt { get; set; }
-        public DateTime? LastLoginAt { get; set; }
-        public int XpTotal { get; set; }
-        public int Level { get; set; }
-        public bool IsDeleted { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? LastLoginAt { get; set; } = DateTime.UtcNow;
+        public int XpTotal { get; set; } = 0;
+        public int Level { get; set; } = 0;
+        public bool IsDeleted { get; set; } = false;
     }
 }

@@ -41,7 +41,7 @@ namespace GuildsApp.Infrastructure
             using var conn = CreateConnection();
             var sql = "DELETE FROM [PostVote] WHERE [PostId] = @PostId AND [UserId] = @UserId";
             
-            ar rows = await conn.ExecuteAsync(sql, new { PostId = postId, UserId = userId });
+            var rows = await conn.ExecuteAsync(sql, new { PostId = postId, UserId = userId });
             return rows > 0;
         }
 
