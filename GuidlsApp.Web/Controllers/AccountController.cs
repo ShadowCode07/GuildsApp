@@ -8,19 +8,19 @@ using System.Security.Claims;
 using GuildsApp.Core.Models;
 using System.Net;
 using Azure.Core;
+using GuildsApp.Application.Interfaces;
 
 namespace GuidlsApp.MVC.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserRepository _usersRepository;
+        private readonly IUserService _userService;
         private readonly ISessionRepository _sessionRepository;
-        private readonly IPasswordHasher _hasher;
 
-        public AccountController(IUserRepository usersRepository, IPasswordHasher hasher, ISessionRepository sessionRepository)
+
+        public AccountController(IUserService userService, ISessionRepository sessionRepository)
         {
-            _usersRepository = usersRepository;
-            _hasher = hasher;
+            _userService = userService;
             _sessionRepository = sessionRepository;
         }
 
@@ -38,15 +38,7 @@ namespace GuidlsApp.MVC.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _usersRepository.GetByUsername(model.Username);
-
-            if (user == null)
-                return Unauthorized("nvalid username or password");
-
-            var validPassword = _hasher.VerifyPassword(model.Password, user.PasswordHash);
-
-            if (!validPassword)
-                return Unauthorized("Invalid username or password");
+            var user = await _userService.LoginAsync(model.Username, model.Password);
 
             var session = new Session
             {
@@ -92,20 +84,7 @@ namespace GuidlsApp.MVC.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var existingUser = await _usersRepository.GetByUsername(model.Username);
-
-            if (existingUser != null)
-                return Unauthorized("Invalid username or password");
-
-            var hashedPassword = _hasher.Hash(model.Password);
-
-            var user = new User
-            {
-                Username = model.Username,
-                PasswordHash = hashedPassword
-            };
-
-            await _usersRepository.CreateAsync(user);
+            await _userService.RegisterAsync(model.Username, model.Password, model.DisplayName);
 
             return RedirectToAction("Index", "Home");
         }
@@ -114,6 +93,15 @@ namespace GuidlsApp.MVC.Controllers
         [Authorize]
         public async Task<IActionResult> Logout()
         {
+            //var session = _sessionRepository + getBySessionToken
+
+            /*
+              if(session != null)
+              {
+                session.IsRevoked = true
+                await _sessionRepository.Update
+             */
+
             await HttpContext.SignOutAsync("AuthCookie");
 
             return RedirectToAction("Login");
