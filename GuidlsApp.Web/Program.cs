@@ -2,6 +2,7 @@ using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Application.Interfaces.Security;
 using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
+using Microsoft.AspNetCore.CookiePolicy;
 
 namespace GuidlsMVC
 {
@@ -33,6 +34,10 @@ namespace GuidlsMVC
                     options.LoginPath = "/Account/Login";
                     options.AccessDeniedPath = "/Account/Denied";
                     options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
                 });
 
             var app = builder.Build();

@@ -7,11 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\GuildsAPP.Core\GuildsApp.Core.csproj" />
+    <Folder Include="Interfaces\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Interfaces\" />
+    <ProjectReference Include="..\GuildspApp.Core\GuildsApp.Core.csproj" />
   </ItemGroup>
 
 </Project>
