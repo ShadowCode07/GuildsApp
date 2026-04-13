@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GuidlsApp.Web.Models.User
+namespace GuildsApp.Web.Models.User
 {
     public class RegisterViewModel
     {

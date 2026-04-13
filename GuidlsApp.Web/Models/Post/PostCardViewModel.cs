@@ -1,4 +1,4 @@
-﻿namespace GuidlsApp.Web.Models.Post
+﻿namespace GuildsApp.Web.Models.Post
 {
     public class PostCardViewModel
     {
@@ -10,6 +10,14 @@
         public string TimeAgo { get; set; } = null!;
         public bool IsPinned { get; set; }
         public int CommentCount { get; set; }
-        public List<string> Tags { get; set; } = new();
+        public string? SaveText { get; set; } = "Save";
+        public bool IsSaved { get; set; }
+        public List<PostTagViewModel> Tags { get; set; } = new();
+    }
+
+    public class PostTagViewModel
+    {
+        public string Text { get; set; } = null!;
+        public string CssClass { get; set; } = "tag--blue";
     }
 }

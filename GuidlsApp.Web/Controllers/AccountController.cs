@@ -1,5 +1,4 @@
-﻿using GuidlsApp.MVC.Models;
-using GuildsApp.Application.Interfaces.Repository;
+﻿using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Application.Interfaces.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
@@ -9,9 +8,9 @@ using GuildsApp.Core.Models;
 using System.Net;
 using Azure.Core;
 using GuildsApp.Application.Interfaces;
-using GuidlsApp.Web.Models.User;
+using GuildsApp.Web.Models.User;
 
-namespace GuidlsApp.MVC.Controllers
+namespace GuildsApp.MVC.Controllers
 {
     public class AccountController : Controller
     {

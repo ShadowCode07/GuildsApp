@@ -1,8 +1,8 @@
-﻿
-using GuidlsApp.Web.Models;
-using GuidlsApp.Web.Models.Quests;
+﻿using GuildsApp.Web.Models;
+using GuildsApp.Web.Models.Post;
+using GuildsApp.Web.Models.Quests;
 
-namespace GuildsApp.Web.ViewModels.Feed
+namespace GuildsApp.Web.Models.Feed
 {
     public class FeedPageViewModel
     {

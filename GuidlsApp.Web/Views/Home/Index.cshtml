@@ -1,23 +1,5 @@
-﻿@using GuidlsApp.MVC.Models
-
-@model PostViewModel
-
-@{
+﻿@{
     ViewData["Title"] = "Home";
 }
 
-@* <h2 class="feed-header">
-    @(User.Identity?.IsAuthenticated == true ? "Your feed" : "Popular posts")
-</h2>
-
-if (Model != null && Model.Any())
-{
-    foreach (var post in Model)
-    {
-        @await Html.PartialAsync("_PostCard", post)
-    }
-}
-else
-{
-    @await Html.PartialAsync("_FeedEmpty")
-} *@
+<h1 style="color:red;">HOME PAGE WORKS</h1>

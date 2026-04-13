@@ -1,8 +1,8 @@
 using System.Diagnostics;
-using GuidlsMVC.Models;
+using GuildsApp.Web.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GuidlsMVC.Controllers
+namespace GuildsApp.Web.Controllers
 {
     public class HomeController : Controller
     {

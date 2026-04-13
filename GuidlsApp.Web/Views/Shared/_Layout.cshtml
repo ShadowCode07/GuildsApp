@@ -3,46 +3,16 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewBag.Title — Guildle</title>
-    <meta name="description" content="@(ViewBag.MetaDescription ?? "Guildle — community knowledge sharing with quests, XP, and badges.")">
+    <title>@ViewData["Title"] - GuidlsApp</title>
 
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="~/css/variables.css" />
-    <link rel="stylesheet" href="~/css/base.css" />
-    <link rel="stylesheet" href="~/css/layout.css" />
-    <link rel="stylesheet" href="~/css/components.css" />
-    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/css/Variable.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Base.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Component.css" asp-append-version="true" />
 </head>
 <body>
+    @RenderBody()
 
-    <div class="app-shell">
-
-        <partial name="_Navbar" />
-
-        <div class="page-body">
-
-            <partial name="_Sidebar" />
-
-            <main class="main-content" id="main" tabindex="-1">
-                @RenderBody()
-            </main>
-
-            @if (IsSectionDefined("RightCol"))
-            {
-                <aside class="right-col">
-                    @RenderSection("RightCol", required: false)
-                </aside>
-            }
-
-        </div>
-
-    </div>
-
-    <script src="~/js/app.js"></script>
-    @RenderSection("Scripts", required: false)
-
+    <script src="~/js/App.js" asp-append-version="true"></script>
 </body>
 </html>

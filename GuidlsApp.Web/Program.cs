@@ -6,7 +6,7 @@ using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
 using Microsoft.AspNetCore.CookiePolicy;
 
-namespace GuidlsMVC
+namespace GuildsApp.Web
 {
     public class Program
     {
@@ -62,7 +62,7 @@ namespace GuidlsMVC
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Feed}/{action=Index}/{id?}");
 
             app.Run();
         }

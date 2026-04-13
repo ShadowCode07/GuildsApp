@@ -1,6 +1,6 @@
 ﻿using Dapper;
 using GuildsApp.Application.Interfaces.Repository;
-using GuildsAPP.Core.Models;
+using GuildsApp.Core.Models;
 using Microsoft.Extensions.Configuration;
 
 namespace GuildsApp.Infrastructure

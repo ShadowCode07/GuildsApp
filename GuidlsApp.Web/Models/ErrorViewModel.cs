@@ -1,4 +1,4 @@
-namespace GuidlsApp.Web.Models
+namespace GuildsApp.Web.Models
 {
     public class ErrorViewModel
     {

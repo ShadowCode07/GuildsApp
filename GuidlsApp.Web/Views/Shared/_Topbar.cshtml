@@ -1,0 +1,29 @@
+﻿@using GuildsApp.Web.Models.Feed
+@model FeedPageViewModel
+
+<header class="navbar">
+    <a href="/Feed/Index" class="navbar__brand">Guildle</a>
+
+    <div class="navbar__search">
+        <span class="navbar__search-icon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M21 21L16.65 16.65M18 11C18 14.866 14.866 18 11 18C7.134 18 4 14.866 4 11C4 7.134 7.134 4 11 4C14.866 4 18 7.134 18 11Z"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round" />
+            </svg>
+        </span>
+
+        <form method="get" action="/Feed/Index">
+            <input type="text"
+                   name="searchQuery"
+                   value="@Model.SearchQuery"
+                   placeholder="Search guilds, posts, quests..." />
+        </form>
+    </div>
+
+    <div class="navbar__right">
+        <a href="/Profile/Index" class="avatar avatar--md avatar--blue">PD</a>
+    </div>
+</header>

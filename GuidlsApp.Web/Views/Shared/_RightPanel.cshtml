@@ -1,17 +1,19 @@
-﻿@model GuildsApp.Web.ViewModels.Feed.FeedPageViewModel
+﻿@using GuildsApp.Web.Models.Feed
+@model FeedPageViewModel
 
-<aside class="right-panel">
-    <section class="panel-card">
-        <div class="panel-card__header">Active quests</div>
+<aside class="right-col">
+    <section class="widget">
+        <div class="widget__header">Active quests</div>
 
-        <div class="quest-list">
+        <div class="widget__body">
             @foreach (var quest in Model.ActiveQuests)
             {
                 <div class="quest-item">
                     <div class="quest-item__icon">☆</div>
-                    <div class="quest-item__body">
+
+                    <div>
                         <div class="quest-item__title">@quest.Title</div>
-                        <div class="quest-item__meta">@quest.MetaText</div>
+                        <div class="quest-item__xp">@quest.RewardText · @quest.StatusText</div>
                     </div>
                 </div>
             }

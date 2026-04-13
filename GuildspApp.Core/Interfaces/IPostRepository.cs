@@ -1,4 +1,4 @@
-﻿using GuildsAPP.Core.Models;
+﻿using GuildsApp.Core.Models;
 
 namespace GuildsApp.Application.Interfaces.Repository
 {

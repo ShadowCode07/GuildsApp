@@ -1,25 +1,31 @@
-﻿@model GuildsApp.Web.ViewModels.Feed.FeedPageViewModel
+﻿@using GuildsApp.Web.Models.Feed
+@model FeedPageViewModel
 
 @{
     ViewData["Title"] = "Feed";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="guildle-page">
-    @await Html.PartialAsync("_GuildSidebar", Model)
+<div class="app-shell">
+    @Html.Partial("_Topbar", Model)
 
-    <div class="guildle-main">
-        @await Html.PartialAsync("_TopBar", Model)
+    <div class="page-body">
+        @Html.Partial("_GuildSidebar", Model)
 
-        <main class="content-area">
-            <section class="feed-column">
-                @foreach (var post in Model.Posts)
-                {
-                    @await Html.PartialAsync("_PostCard", post)
-                }
-            </section>
+        <main class="main-content">
+            <div class="sort-bar">
+                <button type="button" class="btn btn--ghost is-active" data-action="sort" data-sort="hot">Hot</button>
+                <button type="button" class="btn btn--ghost" data-action="sort" data-sort="new">New</button>
+                <button type="button" class="btn btn--ghost" data-action="sort" data-sort="top">Top</button>
+                <div class="sort-bar__spacer"></div>
+                <a href="/Post/Create" class="btn btn--primary">Create post</a>
+            </div>
 
-            @await Html.PartialAsync("_RightPanel", Model)
+            @foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Postcard", post)
+            }
         </main>
+
+        @Html.Partial("_RightPanel", Model)
     </div>
 </div>
