@@ -9,6 +9,7 @@ using GuildsApp.Core.Models;
 using System.Net;
 using Azure.Core;
 using GuildsApp.Application.Interfaces;
+using GuidlsApp.Web.Models.User;
 
 namespace GuidlsApp.MVC.Controllers
 {

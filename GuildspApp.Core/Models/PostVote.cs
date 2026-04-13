@@ -5,6 +5,6 @@
     {
         public int PostId { get; set; }
         public int UserId { get; set; }
-        public byte Value { get; set; }
+        public sbyte Value { get; set; }
     }
 }

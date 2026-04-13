@@ -1,4 +1,4 @@
-﻿namespace GuidlsApp.MVC.Models
+﻿namespace GuidlsApp.Web.Models
 {
     public class PostViewModel
     {

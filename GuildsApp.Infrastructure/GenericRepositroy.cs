@@ -47,7 +47,7 @@ namespace GuildsApp.Infrastructure
             var values = string.Join(", ", _properties.Select(p => "@" + p.Name));
 
             var sql = $"INSERT INTO [{_tableName}] ({columns}) VALUES ({values}); " +
-          $"SELECT CAST(SCOPE_IDENTITY() AS INT);";
+            $"SELECT CAST(SCOPE_IDENTITY() AS INT);";
 
             return await conn.ExecuteScalarAsync<int>(sql, entity);
         }

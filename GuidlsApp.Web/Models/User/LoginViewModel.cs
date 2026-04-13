@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace GuidlsApp.MVC.Models
+namespace GuidlsApp.Web.Models.User
 {
     public class LoginViewModel
     {

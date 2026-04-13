@@ -1,5 +1,7 @@
+using GuildsApp.Application.Interfaces;
 using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Application.Interfaces.Security;
+using GuildsApp.Application.Services;
 using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -22,8 +24,8 @@ namespace GuidlsMVC
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
-
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             builder.Services.AddControllersWithViews();
 

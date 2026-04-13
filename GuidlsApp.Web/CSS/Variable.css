@@ -1,0 +1,60 @@
+﻿:root {
+    /* Brand colours */
+    --color-primary: #538ff5;
+    --color-primary-dark: #3a6fd4;
+    --color-primary-light: #eef3ff;
+    --color-secondary: #8290bb;
+    --color-secondary-light: #d8e3f7;
+    --color-accent-teal: #2a7a65;
+    --color-accent-teal-bg: #e6f4f1;
+    /* Surfaces */
+    --color-bg-page: #f6f9ff;
+    --color-bg-surface: #ffffff;
+    --color-bg-sidebar: #ffffff;
+    --color-bg-input: #f6f9ff;
+    /* Text */
+    --color-text-primary: #1a2a4a;
+    --color-text-secondary: #8290bb;
+    --color-text-muted: #b0bcd8;
+    --color-text-on-primary: #ffffff;
+    /* Borders */
+    --color-border: #d8e3f7;
+    --color-border-focus: #538ff5;
+    /* XP / Gamification */
+    --color-xp-bar: #538ff5;
+    --color-xp-bar-bg: #e8eef9;
+    /* Feedback */
+    --color-success: #2a7a65;
+    --color-success-bg: #e6f4f1;
+    --color-warning: #b06b10;
+    --color-warning-bg: #fff4e6;
+    --color-danger: #c0392b;
+    --color-danger-bg: #fdecea;
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 14px;
+    --space-lg: 20px;
+    --space-xl: 32px;
+    /* Typography */
+    --font-sans: 'DM Sans', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+    --text-xs: 11px;
+    --text-sm: 12px;
+    --text-base: 14px;
+    --text-md: 15px;
+    --text-lg: 18px;
+    --text-xl: 22px;
+    /* Radii */
+    --radius-sm: 6px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-pill: 999px;
+    /* Layout */
+    --nav-height: 50px;
+    --sidebar-width: 210px;
+    --rightcol-width: 230px;
+    --content-max: 1100px;
+    /* Transitions */
+    --transition: 150ms ease;
+}

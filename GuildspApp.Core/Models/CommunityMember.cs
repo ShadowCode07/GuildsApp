@@ -5,8 +5,9 @@
     {
         public int UserId { get; set; }
         public int CommunityId { get; set; }
+
         public string Role { get; set; } = "member";
-        public DateTime JoinedAt { get; set; }
-        public bool IsBanned { get; set; }
+        public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+        public bool IsBanned { get; set; } = false;
     }
 }

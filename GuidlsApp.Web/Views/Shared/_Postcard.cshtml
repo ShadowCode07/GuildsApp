@@ -1,0 +1,40 @@
+﻿@model GuidlsApp.Web.Models.Post.PostCardViewModel
+
+<article class="post-card">
+    <div class="post-card__vote">
+        <button type="button" class="vote-btn">▲</button>
+        <div class="vote-count">@Model.Score</div>
+        <button type="button" class="vote-btn">▼</button>
+    </div>
+
+    <div class="post-card__content">
+        <div class="post-meta">
+            <span>
+                Posted by <a href="/u/@Model.AuthorUsername">u/@Model.AuthorUsername</a>
+                in <a href="/g/@Model.CommunitySlug">g/@Model.CommunitySlug</a>
+            </span>
+            <span>· @Model.TimeAgo</span>
+
+            @if (Model.IsPinned)
+            {
+                <span class="post-state">Pinned</span>
+            }
+        </div>
+
+        <h2 class="post-title">
+            <a href="/posts/@Model.Id">@Model.Title</a>
+        </h2>
+
+        <div class="tag-row">
+            @foreach (var tag in Model.Tags)
+            {
+                <span class="tag">@tag</span>
+            }
+        </div>
+
+        <div class="post-actions">
+            <a href="/posts/@Model.Id" class="post-action">@Model.CommentCount comments</a>
+            <button type="button" class="post-action">Share</button>
+        </div>
+    </div>
+</article>

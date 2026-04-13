@@ -1,4 +1,4 @@
-namespace GuidlsMVC.Models
+namespace GuidlsApp.Web.Models
 {
     public class ErrorViewModel
     {

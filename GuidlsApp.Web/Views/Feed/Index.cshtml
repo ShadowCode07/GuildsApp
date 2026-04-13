@@ -1,0 +1,25 @@
+﻿@model GuildsApp.Web.ViewModels.Feed.FeedPageViewModel
+
+@{
+    ViewData["Title"] = "Feed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="guildle-page">
+    @await Html.PartialAsync("_GuildSidebar", Model)
+
+    <div class="guildle-main">
+        @await Html.PartialAsync("_TopBar", Model)
+
+        <main class="content-area">
+            <section class="feed-column">
+                @foreach (var post in Model.Posts)
+                {
+                    @await Html.PartialAsync("_PostCard", post)
+                }
+            </section>
+
+            @await Html.PartialAsync("_RightPanel", Model)
+        </main>
+    </div>
+</div>

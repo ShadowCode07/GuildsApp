@@ -1,0 +1,24 @@
+﻿@model GuildsApp.Web.ViewModels.Feed.FeedPageViewModel
+
+<aside class="sidebar">
+    <div class="sidebar__section">
+        <p class="sidebar__heading">MY GUILDS</p>
+
+        @foreach (var guild in Model.MyCommunities)
+        {
+            <a href="/g/@guild.Slug" class="sidebar__guild @(guild.IsActive ? "is-active" : "")">
+                <span class="guild-avatar" style="background:@guild.ColorHex">@guild.Initials</span>
+                <span>g/@guild.Slug</span>
+            </a>
+        }
+    </div>
+
+    <div class="sidebar__section">
+        <p class="sidebar__heading">NAVIGATE</p>
+
+        <a href="/feed" class="sidebar__nav-item is-selected">Feed</a>
+        <a href="/quests" class="sidebar__nav-item">Quest board</a>
+        <a href="/profile" class="sidebar__nav-item">Profile</a>
+        <a href="/communities/discover" class="sidebar__nav-item">Discover guilds</a>
+    </div>
+</aside>
