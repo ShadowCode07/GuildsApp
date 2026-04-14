@@ -5,19 +5,45 @@ using GuildsApp.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace GuildsApp.Application.Services
 {
-    public class UserService : IUserService
+    public class AccountService : IAccountService
     {
         public readonly IUserRepository _userRepository;
+        public readonly ISessionRepository _sessionRepository;
         public readonly IPasswordHasher _passwordHasher;
-        public UserService(IUserRepository userRepository, IPasswordHasher hasher)
+        public AccountService(IUserRepository userRepository, IPasswordHasher hasher, ISessionRepository sessionRepository)
         {
             _userRepository = userRepository;
             _passwordHasher = hasher;
+            _sessionRepository = sessionRepository;
+        }
+
+        public async Task<Session> CreateSessionAsync(int userId, string ipAddress)
+        {
+            var session = new Session
+            {
+                UserId = userId,
+                SessionToken = GenerateSessionToken(),
+                CreatedAt = DateTime.UtcNow,
+                ExpiresAt = DateTime.UtcNow.AddHours(7),
+                LastActivityAt = DateTime.UtcNow,
+                IPAddress = ipAddress,
+                IsRevoked = false
+            };
+
+            await _sessionRepository.CreateAsync(session);
+
+            return session;
+        }
+
+        private static string GenerateSessionToken()
+        {
+            return Convert.ToHexString(RandomNumberGenerator.GetBytes(32));
         }
 
         public async Task<User?> GetByIdAsync(int id)
@@ -54,7 +80,7 @@ namespace GuildsApp.Application.Services
 
         public async Task RegisterAsync(string username, string password, string displayName)
         {
-            var existingUser = _userRepository.GetByUsername(username);
+            var existingUser = await _userRepository.GetByUsername(username);
 
             if (existingUser != null)
                 throw new Exception("Username already taken");
@@ -70,6 +96,18 @@ namespace GuildsApp.Application.Services
             };
 
             await _userRepository.CreateAsync(user);
+        }
+
+        public async Task RevokeSession(string sessionToken)
+        {
+            var existingSession = await _sessionRepository.GetByTokenAsync(sessionToken);
+
+            if(existingSession == null)
+                throw new Exception("Session not found");
+
+            existingSession.IsRevoked = true;
+
+            await _sessionRepository.UpdateAsync(existingSession);
         }
 
         public async Task SoftDeleteAsync(int id)

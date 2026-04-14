@@ -17,6 +17,7 @@ namespace GuildsApp.Infrastructure
             var sql = $"SELECT TOP 1 * FROM [{_tableName}] WHERE Username = @Username";
 
             var result = await conn.QueryFirstOrDefaultAsync<User>(sql, new { Username = username });
+
             return result;
         }
 

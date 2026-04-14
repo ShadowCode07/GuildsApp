@@ -24,6 +24,22 @@
     </div>
 
     <div class="navbar__right">
-        <a href="/Profile/Index" class="avatar avatar--md avatar--blue">PD</a>
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+            <a href="/Profile/Index" class="avatar avatar--md avatar--blue">
+                @(User.Identity.Name != null && User.Identity.Name.Length >= 2
+                            ? User.Identity.Name.Substring(0, 2).ToUpper()
+                            : "ME")
+        </a>
+
+            <form method="post" action="/Account/Logout" class="navbar__logout-form">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn--outline">Logout</button>
+            </form>
+                }
+        else
+        {
+            <a href="/Account/Login" class="btn btn--outline">Login</a>
+        }
     </div>
 </header>

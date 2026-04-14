@@ -14,14 +14,12 @@ namespace GuildsApp.MVC.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserService _userService;
-        private readonly ISessionRepository _sessionRepository;
+        private readonly IAccountService _accountService;
 
 
-        public AccountController(IUserService userService, ISessionRepository sessionRepository)
+        public AccountController(IAccountService accountService)
         {
-            _userService = userService;
-            _sessionRepository = sessionRepository;
+            _accountService = accountService;
         }
 
         [HttpGet]
@@ -36,22 +34,11 @@ namespace GuildsApp.MVC.Controllers
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return View(model);
 
-            var user = await _userService.LoginAsync(model.Username, model.Password);
+            var user = await _accountService.LoginAsync(model.Username, model.Password);
 
-            var session = new Session
-            {
-                UserId = user.Id,
-                SessionToken = "implement a service",
-                CreatedAt = DateTime.UtcNow,
-                ExpiresAt = DateTime.UtcNow.AddHours(7),
-                LastActivityAt = DateTime.UtcNow,
-                IPAddress = GetClientIp(),
-                IsRevoked = false
-            };
-
-            await _sessionRepository.CreateAsync(session);
+            var session = await _accountService.CreateSessionAsync(user.Id, GetClientIp());
 
             var claims = new List<Claim>
             {
@@ -66,7 +53,7 @@ namespace GuildsApp.MVC.Controllers
 
             await HttpContext.SignInAsync("AuthCookie", principal);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Feed");
         }
 
         [HttpGet]
@@ -82,25 +69,18 @@ namespace GuildsApp.MVC.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+                return View(model);
 
-            await _userService.RegisterAsync(model.Username, model.Password, model.DisplayName);
+            await _accountService.RegisterAsync(model.Username, model.Password, model.DisplayName);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "Account");
         }
 
         [HttpPost]
         [Authorize]
         public async Task<IActionResult> Logout()
         {
-            //var session = _sessionRepository + getBySessionToken
-
-            /*
-              if(session != null)
-              {
-                session.IsRevoked = true
-                await _sessionRepository.Update
-             */
+            await _accountService.RevokeSession(User.Claims.FirstOrDefault(c => c.Type == "Session_Token")?.Value ?? string.Empty);
 
             await HttpContext.SignOutAsync("AuthCookie");
 

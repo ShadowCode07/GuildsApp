@@ -25,7 +25,7 @@ namespace GuildsApp.Web
             builder.Services.AddScoped<IUserRepository, UserRepository>();
 
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAccountService, AccountService>();
 
             builder.Services.AddControllersWithViews();
 
