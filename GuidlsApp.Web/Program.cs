@@ -1,6 +1,7 @@
 using GuildsApp.Application.Interfaces;
 using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Application.Interfaces.Security;
+using GuildsApp.Application.MappingProfiles;
 using GuildsApp.Application.Services;
 using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
@@ -26,6 +27,12 @@ namespace GuildsApp.Web
 
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+
+            builder.Services.AddAutoMapper(cfg =>
+            {
+                cfg.AddProfile<PostProfile>();
+            });
+
 
             builder.Services.AddControllersWithViews();
 

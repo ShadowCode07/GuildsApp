@@ -8,6 +8,7 @@ namespace GuildsApp.Infrastructure
     {
         public CommunityRepository(IConfiguration config) : base(config)
         {
+
         }
     }
 }

@@ -75,5 +75,14 @@ namespace GuildsApp.Infrastructure
             var rows = await conn.ExecuteAsync(sql, member);
             return rows > 0;
         }
+
+        public Task<bool> IsMemberAsync(int userId, int communityId)
+        {
+            using var conn = CreateConnection();
+            var sql = "SELECT COUNT(1) FROM [CommunityMember] WHERE [UserId] = @UserId AND [CommunityId] = @CommunityId AND [IsBanned] = 0";
+
+            var count = conn.ExecuteScalar<int>(sql, new { UserId = userId, CommunityId = communityId });
+            return Task.FromResult(count > 0);
+        }
     }
 }

@@ -1,106 +1,135 @@
-﻿using GuildsApp.Application.Interfaces.Repository;
-using GuildsApp.Application.Interfaces.Security;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using GuildsApp.Core.Models;
-using System.Net;
-using Azure.Core;
+﻿using Azure.Core;
+using GuildsApp.Application.DTOs.PostDTOs;
 using GuildsApp.Application.Interfaces;
+using GuildsApp.Application.Interfaces.Repository;
+using GuildsApp.Application.Interfaces.Security;
+using GuildsApp.Core.Models;
 using GuildsApp.Web.Models.User;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System.Net;
+using System.Security.Claims;
 
 namespace GuildsApp.MVC.Controllers
 {
-    public class AccountController : Controller
+
+    [Authorize]
+    public class PostController : Controller
     {
-        private readonly IAccountService _accountService;
+        private readonly IPostService _postService;
 
-
-        public AccountController(IAccountService accountService)
+        public PostController(IPostService postService)
         {
-            _accountService = accountService;
+            _postService = postService;
+        }
+
+        private int GetUserId() =>
+            int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value
+                ?? throw new UnauthorizedAccessException("User ID claim is missing."));
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id)
+        {
+            var post = await _postService.GetPost(id);
+            return View(post);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult Login()
+        public async Task<IActionResult> Guild(int id)
         {
-            return View();
+            var posts = await _postService.GetPostsByGuild(id);
+            return View(posts);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> User(int id)
+        {
+            var posts = await _postService.GetPostsByUser(id);
+            return View(posts);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View(new CreatePostDto());
         }
 
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginViewModel model)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreatePostDto dto)
         {
             if (!ModelState.IsValid)
-                return View(model);
+                return View(dto);
 
-            var user = await _accountService.LoginAsync(model.Username, model.Password);
-
-            var session = await _accountService.CreateSessionAsync(user.Id, GetClientIp());
-
-            var claims = new List<Claim>
+            try
             {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim("UserId", user.Id.ToString()),
-                new Claim("Session_Token", session.SessionToken)
-            };
+                var post = await _postService.Write(GetUserId(), dto);
+                return RedirectToAction(nameof(Details), new { id = post.Id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
+        }
 
-            var identity = new ClaimsIdentity(claims, "AuthCookie");
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var post = await _postService.GetPost(id);
+            var dto = new UpdatePostDto { Title = post.Title, Body = post.Body };
+            return View(dto);
+        }
 
-            var principal = new ClaimsPrincipal(identity);
+        [HttpPost]
+        public async Task<IActionResult> Edit(int id, UpdatePostDto dto)
+        {
+            if (!ModelState.IsValid)
+                return View(dto);
 
-            await HttpContext.SignInAsync("AuthCookie", principal);
+            await _postService.Edit(id, GetUserId(), dto);
+            return RedirectToAction(nameof(Details), new { id });
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _postService.Delete(id, GetUserId());
             return RedirectToAction("Index", "Feed");
         }
 
-        [HttpGet]
-        [AllowAnonymous]
-        public IActionResult Register()
-        {
-            return View();
-        }
-
-
         [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterViewModel model)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Pin(int id)
         {
-            if (!ModelState.IsValid)
-                return View(model);
-
-            await _accountService.RegisterAsync(model.Username, model.Password, model.DisplayName);
-
-            return RedirectToAction("Login", "Account");
+            await _postService.Pin(id);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpPost]
-        [Authorize]
-        public async Task<IActionResult> Logout()
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Unpin(int id)
         {
-            await _accountService.RevokeSession(User.Claims.FirstOrDefault(c => c.Type == "Session_Token")?.Value ?? string.Empty);
-
-            await HttpContext.SignOutAsync("AuthCookie");
-
-            return RedirectToAction("Login");
+            await _postService.Unpin(id);
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        public string GetClientIp()
+        [HttpPost]
+        public async Task<IActionResult> UpVote(int id)
         {
-
-            if (Request.Headers.ContainsKey("X-Forwarded-For"))
-            {
-                var ip = Request.Headers["X-Forwarded-For"].FirstOrDefault();
-                if (!string.IsNullOrEmpty(ip))
-                {
-                    return ip.Split(',')[0].Trim();
-                }
-            }
-
-            return HttpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
+            await _postService.UpVote(id, GetUserId());
+            return RedirectToAction(nameof(Details), new { id });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> DownVote(int id)
+        {
+            await _postService.DownVote(id, GetUserId());
+            return RedirectToAction(nameof(Details), new { id });
+        }
     }
 }

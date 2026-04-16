@@ -6,6 +6,7 @@ namespace GuildsApp.Application.Interfaces.Repository
     {
         Task<IReadOnlyList<CommunityMember>?> GetByCommunityAsync(int communityId);
         Task<IReadOnlyList<CommunityMember>?> GetByUserAsync(int userId);
+        Task<bool> IsMemberAsync(int userId, int communityId);
         Task<CommunityMember?> GetAsync(int userId, int communityId);
         Task<bool> AddAsync(CommunityMember member);
         Task<bool> UpdateAsync(CommunityMember member);

@@ -28,5 +28,23 @@ namespace GuildsApp.Infrastructure
             var rows = await conn.ExecuteAsync(sql, new { Id = id });
             return rows > 0;
         }
+
+        public async Task<IReadOnlyList<Post>?> GetByGuildAsync(int guildId)
+        {
+            using var conn = CreateConnection();
+            var sql = $"SELECT * FROM [{_tableName}] WHERE [CommunityId] = @GuildId AND [IsDeleted] = 0";
+            
+            var result = await conn.QueryAsync<Post>(sql, new { GuildId = guildId });
+            return result.ToList();
+        }
+
+        public async Task<IReadOnlyList<Post>?> GetByUserAsync(int userId)
+        {
+            using var conn = CreateConnection();
+            var sql = $"SELECT * FROM [{_tableName}] WHERE [AuthorUserId] = @UserId AND [IsDeleted] = 0";
+
+            var result = await conn.QueryAsync<Post>(sql, new { UserId = userId });
+            return result.ToList();
+        }
     }
 }
