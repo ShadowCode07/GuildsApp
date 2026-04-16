@@ -1,0 +1,66 @@
+﻿@using GuildsApp.Web.Models.Feed
+@model FeedPageViewModel
+
+<div class="modal-overlay" id="create-post-modal" aria-hidden="true">
+    <div class="modal-backdrop" data-action="close-create-modal"></div>
+
+    <div class="post-modal" role="dialog" aria-modal="true" aria-labelledby="create-post-title">
+        <div class="post-modal__header">
+            <h2 id="create-post-title" class="post-modal__title">Create post</h2>
+
+            <button type="button" class="post-modal__close" data-action="close-create-modal" aria-label="Close">
+                ✕
+            </button>
+        </div>
+
+        <form id="create-post-form" class="post-composer">
+            @Html.AntiForgeryToken()
+
+            <div class="post-composer__toprow">
+                <div class="post-composer__guild-wrap">
+                    <label for="create-post-community" class="post-composer__guild-label">Guild</label>
+
+                    <select id="create-post-community" name="CommunityId" class="post-composer__select">
+                        @foreach (var guild in Model.MyCommunities)
+                        {
+                            if (guild.IsActive)
+                            {
+                                <option value="@guild.Id" selected>g/@guild.Slug</option>
+                            }
+                            else
+                            {
+                                <option value="@guild.Id">g/@guild.Slug</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="post-composer__tabs">
+                <button type="button" class="post-composer__tab is-active">Text</button>
+            </div>
+
+            <div class="post-composer__field">
+                <input type="text"
+                       name="Title"
+                       class="post-composer__title-input"
+                       maxlength="300"
+                       placeholder="Title*" />
+                <div class="post-composer__counter">
+                    <span id="post-title-count">0</span>/300
+                </div>
+            </div>
+
+            <div class="post-composer__editor post-composer__editor--plain">
+                <textarea name="Body"
+                          class="post-composer__textarea post-composer__textarea--plain"
+                          placeholder="Body text*"></textarea>
+            </div>
+
+            <div class="post-composer__actions">
+                <button type="button" class="btn btn--ghost" data-action="close-create-modal">Cancel</button>
+                <button type="submit" class="post-composer__submit">Post</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -10,6 +10,7 @@ using System.Security.Claims;
 
 namespace GuildsApp.Web.Controllers
 {
+    [Authorize]
     public class PostController : Controller
     {
         private readonly IPostService _postService;
@@ -20,81 +21,177 @@ namespace GuildsApp.Web.Controllers
         }
 
         private int GetUserId() =>
-            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)
+            int.Parse(HttpContext.User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value
                 ?? throw new UnauthorizedAccessException("User ID claim is missing."));
 
-        [HttpGet("{id}")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPost(int id)
+        public async Task<IActionResult> Details(int id)
         {
             var post = await _postService.GetPost(id);
-            return Ok(post);
+            return View(post);
         }
 
-        [HttpGet("guild/{guildId}")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPostsByGuild(int guildId)
+        public async Task<IActionResult> Guild(int id)
         {
-            var posts = await _postService.GetPostsByGuild(guildId);
-            return Ok(posts);
+            var posts = await _postService.GetPostsByGuild(id);
+            return View(posts);
         }
 
-        [HttpGet("user/{userId}")]
+        [HttpGet]
         [AllowAnonymous]
-        public async Task<IActionResult> GetPostsByUser(int userId)
+        public async Task<IActionResult> User(int id)
         {
-            var posts = await _postService.GetPostsByUser(userId);
-            return Ok(posts);
+            var posts = await _postService.GetPostsByUser(id);
+            return View(posts);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            var dto = new CreatePostDto();
+            return View(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreatePost([FromBody] CreatePostDto dto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(CreatePostDto dto)
         {
-            var post = await _postService.Write(GetUserId(), dto);
-            return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                var post = await _postService.Write(GetUserId(), dto);
+                return RedirectToAction(nameof(Details), new { id = post.Id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdatePost(int id, [FromBody] UpdatePostDto dto)
+        [HttpPost]
+        public async Task<IActionResult> CreateAjax([FromBody] CreatePostDto dto)
         {
-            var post = await _postService.Edit(id, GetUserId(), dto);
-            return Ok(post);
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState
+                    .Where(x => x.Value != null && x.Value.Errors.Count > 0)
+                    .ToDictionary(
+                        x => x.Key,
+                        x => x.Value!.Errors.Select(e => e.ErrorMessage).ToArray()
+                    );
+
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid post data.",
+                    errors
+                });
+            }
+
+            try
+            {
+                var post = await _postService.Write(GetUserId(), dto);
+
+                return Ok(new
+                {
+                    success = true,
+                    id = post.Id,
+                    message = "Post created successfully."
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
         }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(int id)
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(int id)
+        {
+            var post = await _postService.GetPost(id);
+
+            var dto = new UpdatePostDto
+            {
+                Title = post.Title,
+                Body = post.Body
+            };
+
+            return View(dto);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, UpdatePostDto dto)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _postService.Edit(id, GetUserId(), dto);
+                return RedirectToAction(nameof(Details), new { id });
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
         {
             await _postService.Delete(id, GetUserId());
-            return NoContent();
+            return RedirectToAction("Index", "Feed");
         }
 
-        [HttpPost("{id}/pin")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> PinPost(int id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Pin(int id)
         {
             await _postService.Pin(id);
-            return NoContent();
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        [HttpPost("{id}/unpin")]
+        [HttpPost]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UnpinPost(int id)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Unpin(int id)
         {
             await _postService.Unpin(id);
-            return NoContent();
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        [HttpPost("{id}/upvote")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpVote(int id)
         {
             await _postService.UpVote(id, GetUserId());
-            return NoContent();
+            return RedirectToAction(nameof(Details), new { id });
         }
 
-        [HttpPost("{id}/downvote")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DownVote(int id)
         {
             await _postService.DownVote(id, GetUserId());
-            return NoContent();
+            return RedirectToAction(nameof(Details), new { id });
         }
     }
 }

@@ -17,7 +17,7 @@
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="new">New</button>
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="top">Top</button>
                 <div class="sort-bar__spacer"></div>
-                <a href="/Post/Create" class="btn btn--primary">Create post</a>
+                <button type="button" class="btn btn--primary" data-action="open-create-modal">Create post</button>
             </div>
 
             @foreach (var post in Model.Posts)
@@ -29,3 +29,5 @@
         @Html.Partial("_RightPanel", Model)
     </div>
 </div>
+
+@Html.Partial("_CreatePostModal")

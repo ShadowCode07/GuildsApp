@@ -1,4 +1,5 @@
 ﻿using GuildsApp.Web.Models;
+using GuildsApp.Web.Models.GuidlsApp.Web.Models.Feed;
 using GuildsApp.Web.Models.Post;
 using GuildsApp.Web.Models.Quests;
 

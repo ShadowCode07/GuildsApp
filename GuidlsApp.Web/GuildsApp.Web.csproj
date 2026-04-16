@@ -33,4 +33,8 @@
     <ProjectReference Include="..\GuildsApp.Infrastructure\GuildsApp.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Post\" />
+  </ItemGroup>
+
 </Project>

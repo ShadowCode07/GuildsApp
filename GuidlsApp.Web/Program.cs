@@ -27,6 +27,7 @@ namespace GuildsApp.Web
 
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<IPostService, PostService>();
 
             builder.Services.AddAutoMapper(cfg =>
             {

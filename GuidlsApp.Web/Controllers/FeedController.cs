@@ -1,5 +1,6 @@
 ﻿using GuildsApp.Web.Models;
 using GuildsApp.Web.Models.Feed;
+using GuildsApp.Web.Models.GuidlsApp.Web.Models.Feed;
 using GuildsApp.Web.Models.Post;
 using GuildsApp.Web.Models.Quests;
 using Microsoft.AspNetCore.Mvc;
@@ -17,24 +18,36 @@ namespace GuildsApp.Web.Controllers
                 {
                     new SidebarCommunityViewModel
                     {
+                        Id = 1,
                         Name = "coding",
                         Slug = "coding",
                         Initials = "CS",
                         AvatarClass = "avatar--blue",
                         IsActive = true
-                    }
-                },
-                Posts = new List<PostCardViewModel>
-                {
-                    new PostCardViewModel
+                    },
+                    new SidebarCommunityViewModel
                     {
-                        Id = 1,
-                        Score = 342,
-                        Title = "Test post",
-                        AuthorUsername = "plamen_d",
-                        CommunitySlug = "coding",
-                        TimeAgo = "2h ago",
-                        CommentCount = 84
+                        Id = 2,
+                        Name = "design",
+                        Slug = "design",
+                        Initials = "DZ",
+                        AvatarClass = "avatar--teal"
+                    },
+                    new SidebarCommunityViewModel
+                    {
+                        Id = 3,
+                        Name = "gaming",
+                        Slug = "gaming",
+                        Initials = "GM",
+                        AvatarClass = "avatar--purple"
+                    },
+                    new SidebarCommunityViewModel
+                    {
+                        Id = 4,
+                        Name = "science",
+                        Slug = "science",
+                        Initials = "SC",
+                        AvatarClass = "avatar--amber"
                     }
                 },
                 ActiveQuests = new List<ActiveQuestViewModel>
