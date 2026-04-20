@@ -15,12 +15,12 @@
             </svg>
         </span>
 
-        <form method="get" action="/Feed/Index">
-            <input type="text"
-                   name="searchQuery"
-                   value="@Model.SearchQuery"
-                   placeholder="Search guilds, posts, quests..." />
-        </form>
+        <input id="guild-search-input"
+               type="text"
+               value="@Model.SearchQuery"
+               placeholder="Search guilds..." />
+
+        <div id="guild-search-dropdown" class="search-dropdown"></div>
     </div>
 
     <div class="navbar__right">
@@ -36,10 +36,13 @@
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn--outline">Logout</button>
             </form>
-                }
+        }
         else
         {
-            <a href="/Account/Login" class="btn btn--outline">Login</a>
+            <div class="navbar__auth-links">
+                <a href="/Account/Login" class="btn btn--outline">Login</a>
+                <a href="/Account/Register" class="btn btn--light">Create account</a>
+            </div>
         }
     </div>
 </header>

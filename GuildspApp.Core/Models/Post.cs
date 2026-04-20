@@ -12,7 +12,7 @@
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
 
-        public bool IsPinned { get; set; } = false;
+        public bool IsPinned { get; set; } = false; 
         public bool IsDeleted { get; set; } = false;
 
         public int Score { get; set; } = 0;

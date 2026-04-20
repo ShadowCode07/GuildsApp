@@ -1,68 +1,82 @@
-﻿using GuildsApp.Web.Models;
+using GuildsApp.Application.Interfaces;
 using GuildsApp.Web.Models.Feed;
-using GuildsApp.Web.Models.GuidlsApp.Web.Models.Feed;
-using GuildsApp.Web.Models.Post;
-using GuildsApp.Web.Models.Quests;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GuildsApp.Web.Controllers
 {
     public class FeedController : Controller
     {
-        public IActionResult Index()
+        private readonly IFeedService _feedService;
+
+        public FeedController(IFeedService feedService)
         {
+            _feedService = feedService;
+        }
+
+        private int? GetUserIdOrNull()
+        {
+            var claim = User.Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+            if (string.IsNullOrWhiteSpace(claim))
+                return null;
+
+            return int.Parse(claim);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Index(string? slug, string? searchQuery)
+        {
+            var userId = GetUserIdOrNull();
+            var sidebarGuilds = (await _feedService.GetSidebarGuildsAsync(userId)).ToList();
+
             var model = new FeedPageViewModel
             {
-                ActiveCommunitySlug = "coding",
-                MyCommunities = new List<SidebarCommunityViewModel>
-                {
-                    new SidebarCommunityViewModel
-                    {
-                        Id = 1,
-                        Name = "coding",
-                        Slug = "coding",
-                        Initials = "CS",
-                        AvatarClass = "avatar--blue",
-                        IsActive = true
-                    },
-                    new SidebarCommunityViewModel
-                    {
-                        Id = 2,
-                        Name = "design",
-                        Slug = "design",
-                        Initials = "DZ",
-                        AvatarClass = "avatar--teal"
-                    },
-                    new SidebarCommunityViewModel
-                    {
-                        Id = 3,
-                        Name = "gaming",
-                        Slug = "gaming",
-                        Initials = "GM",
-                        AvatarClass = "avatar--purple"
-                    },
-                    new SidebarCommunityViewModel
-                    {
-                        Id = 4,
-                        Name = "science",
-                        Slug = "science",
-                        Initials = "SC",
-                        AvatarClass = "avatar--amber"
-                    }
-                },
-                ActiveQuests = new List<ActiveQuestViewModel>
-                {
-                    new ActiveQuestViewModel
-                    {
-                        Id = 1,
-                        Title = "Write a beginner guide",
-                        RewardText = "+150 XP",
-                        StatusText = "3 days left"
-                    }
-                }
+                IsAuthenticated = userId.HasValue,
+                SearchQuery = searchQuery,
+                SidebarGuilds = sidebarGuilds,
+                PostableGuilds = sidebarGuilds
+                    .Where(g => g.IsJoined)
+                    .OrderBy(g => g.Name)
+                    .ToList()
             };
 
-            return View(model);
+            if (!string.IsNullOrWhiteSpace(slug))
+            {
+                var guild = await _feedService.GetGuildBySlugAsync(slug, userId);
+                if (guild == null)
+                    return NotFound();
+
+                model.IsGuildFeed = true;
+                model.ActiveGuildId = guild.Id;
+                model.ActiveGuildSlug = guild.Slug;
+                model.ActiveGuildName = guild.Name;
+                model.Posts = (await _feedService.GetGuildFeedAsync(slug, userId)).ToList();
+            }
+            else
+            {
+                model.IsGuildFeed = false;
+                model.Posts = (await _feedService.GetMixedFeedAsync(userId)).ToList();
+            }
+
+            return View(nameof(Index), model);
+        }
+
+        [HttpGet("/g/{slug}")]
+        public async Task<IActionResult> Guild(string slug)
+        {
+            return await Index(slug, null);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SearchGuilds(string query)
+        {
+            if (string.IsNullOrWhiteSpace(query))
+                return Json(Array.Empty<object>());
+
+            var userId = GetUserIdOrNull();
+            var results = await _feedService.SearchGuildsAsync(query.Trim(), userId);
+
+            return Json(results);
         }
     }
 }

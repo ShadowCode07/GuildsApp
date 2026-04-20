@@ -1,0 +1,57 @@
+@model IEnumerable<GuildsApp.Application.DTOs.CommunityDTOs.CommunityListItemDto>
+
+@{
+    ViewData["Title"] = "Discover guilds";
+}
+
+<div class="community-shell">
+    <section class="community-header">
+        <div>
+            <p class="community-header__eyebrow">Discover</p>
+            <h1 class="community-header__title">Find a guild to follow</h1>
+            <p class="community-header__text">
+                Browse communities, jump into a guild feed, and narrow your timeline to the conversations you care about.
+            </p>
+        </div>
+
+        @if (User.Identity?.IsAuthenticated == true)
+        {
+            <a href="/Community/Create" class="btn btn--primary">Create guild</a>
+        }
+        else
+        {
+            <a href="/Account/Login" class="btn btn--primary">Login to create</a>
+        }
+    </section>
+
+    @if (Model.Any())
+    {
+        <section class="community-grid">
+            @foreach (var guild in Model.OrderBy(g => g.Name))
+            {
+                <article class="community-card">
+                    <div>
+                        <p class="community-card__slug">g/@guild.Slug</p>
+                        <h2 class="community-card__title">
+                            <a href="/g/@guild.Slug">@guild.Name</a>
+                        </h2>
+                        <p class="community-card__description">
+                            @(string.IsNullOrWhiteSpace(guild.Description)
+                                ? "No description has been added yet."
+                                : guild.Description)
+                        </p>
+                    </div>
+
+                    <a href="/g/@guild.Slug" class="btn btn--ghost">Open feed</a>
+                </article>
+            }
+        </section>
+    }
+    else
+    {
+        <section class="empty-state">
+            <h2 class="empty-state__title">No guilds yet</h2>
+            <p class="empty-state__text">Create the first guild and start shaping the conversation.</p>
+        </section>
+    }
+</div>

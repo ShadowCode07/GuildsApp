@@ -46,8 +46,8 @@ namespace GuildsApp.Application.Services
             var post = _mapper.Map<Post>(dto);
             post.AuthorUserId = userId;
 
-            var created = await _postRepository.CreateAsync(post);
-            return _mapper.Map<PostDto>(created);
+            post.Id = await _postRepository.CreateAsync(post);
+            return _mapper.Map<PostDto>(post);
         }
 
         public async Task<PostDto> Edit(int postId, int userId, UpdatePostDto dto)
@@ -63,7 +63,10 @@ namespace GuildsApp.Application.Services
             post.UpdatedAt = DateTime.UtcNow;
 
             var updated = await _postRepository.UpdateAsync(post);
-            return _mapper.Map<PostDto>(updated);
+            if (!updated)
+                throw new InvalidOperationException("Failed to update post.");
+
+            return _mapper.Map<PostDto>(post);
         }
 
         public async Task Delete(int postId, int userId)
@@ -87,13 +90,13 @@ namespace GuildsApp.Application.Services
 
         public async Task<IEnumerable<PostDto>> GetPostsByGuild(int guildId)
         {
-            var posts = await _postRepository.GetByGuildAsync(guildId);
+            var posts = await _postRepository.GetByGuildAsync(guildId) ?? Array.Empty<Post>();
             return _mapper.Map<IEnumerable<PostDto>>(posts.Where(p => !p.IsDeleted));
         }
 
         public async Task<IEnumerable<PostDto>> GetPostsByUser(int userId)
         {
-            var posts = await _postRepository.GetByUserAsync(userId);
+            var posts = await _postRepository.GetByUserAsync(userId) ?? Array.Empty<Post>();
             return _mapper.Map<IEnumerable<PostDto>>(posts.Where(p => !p.IsDeleted));
         }
 

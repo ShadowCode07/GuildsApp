@@ -1,33 +1,72 @@
-﻿@using GuildsApp.Web.Models.Feed
+@using GuildsApp.Web.Models.Feed
 @model FeedPageViewModel
 
 @{
-    ViewData["Title"] = "Feed";
+    ViewData["Title"] = Model.FeedTitle;
 }
 
 <div class="app-shell">
-    @Html.Partial("_Topbar", Model)
+    <partial name="_Topbar" model="Model" />
 
     <div class="page-body">
-        @Html.Partial("_GuildSidebar", Model)
+        <partial name="_GuildSidebar" model="Model" />
 
         <main class="main-content">
+            <section class="feed-heading">
+                <div>
+                    <p class="feed-heading__eyebrow">@(Model.IsGuildFeed ? "Guild feed" : "Public feed")</p>
+                    <h1>@Model.FeedTitle</h1>
+                    <p>@Model.FeedDescription</p>
+                </div>
+
+                @if (Model.CanCreatePost)
+                {
+                    <button type="button" class="btn btn--primary" data-action="open-create-modal">Create post</button>
+                }
+                else if (Model.IsAuthenticated)
+                {
+                    <a href="/Community/Create" class="btn btn--primary">Create guild</a>
+                }
+                else
+                {
+                    <a href="/Account/Login" class="btn btn--primary">Login to post</a>
+                }
+            </section>
+
             <div class="sort-bar">
                 <button type="button" class="btn btn--ghost is-active" data-action="sort" data-sort="hot">Hot</button>
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="new">New</button>
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="top">Top</button>
                 <div class="sort-bar__spacer"></div>
-                <button type="button" class="btn btn--primary" data-action="open-create-modal">Create post</button>
+                <span class="sort-bar__meta">
+                    @(Model.IsGuildFeed
+                        ? "Only posts from this guild are shown."
+                        : "Posts from public guilds appear here.")
+                </span>
             </div>
 
-            @foreach (var post in Model.Posts)
+            @if (Model.Posts.Any())
             {
-                @Html.Partial("_Postcard", post)
+                foreach (var post in Model.Posts)
+                {
+                    <partial name="_PostCard" model="post" />
+                }
+            }
+            else
+            {
+                <div class="empty-state">
+                    <h2 class="empty-state__title">No posts yet</h2>
+                    <p class="empty-state__text">
+                        @(Model.IsGuildFeed
+                            ? "This guild does not have any posts yet. Be the first to start the conversation."
+                            : "The public feed is quiet right now. Try another guild or create a post once you join one.")
+                    </p>
+                </div>
             }
         </main>
 
-        @Html.Partial("_RightPanel", Model)
+        <partial name="_RightPanel" model="Model" />
     </div>
 </div>
 
-@Html.Partial("_CreatePostModal")
+<partial name="_CreatePostModal" model="Model" />

@@ -1,32 +1,17 @@
-﻿@using GuildsApp.Web.Models.Post
-@model PostCardViewModel
+﻿@model GuildsApp.Application.DTOs.FeedDTOs.FeedPostDto
 
 <article class="post" data-post-id="@Model.Id">
     <div class="post__vote">
-        <button type="button"
-                class="post__vote-btn post__vote-btn--up"
-                data-action="vote"
-                data-value="1"
-                aria-label="Upvote">
-            ▲
-        </button>
-
+        <button type="button" class="post__vote-btn post__vote-btn--up" data-action="vote" data-value="1" aria-label="Upvote">▲</button>
         <div class="post__vote-count">@Model.Score</div>
-
-        <button type="button"
-                class="post__vote-btn post__vote-btn--down"
-                data-action="vote"
-                data-value="-1"
-                aria-label="Downvote">
-            ▼
-        </button>
+        <button type="button" class="post__vote-btn post__vote-btn--down" data-action="vote" data-value="-1" aria-label="Downvote">▼</button>
     </div>
 
     <div class="post__body">
         <div class="post__meta">
             Posted by <a href="/u/@Model.AuthorUsername">u/@Model.AuthorUsername</a>
             in <a href="/g/@Model.CommunitySlug">g/@Model.CommunitySlug</a>
-            · @Model.TimeAgo
+            · @Model.CreatedAt.ToLocalTime().ToString("g")
 
             @if (Model.IsPinned)
             {
@@ -38,35 +23,9 @@
             <a href="/Post/Details/@Model.Id">@Model.Title</a>
         </h2>
 
-        @if (Model.Tags != null && Model.Tags.Any())
-        {
-            <div class="post__tags">
-                @foreach (var tag in Model.Tags)
-                {
-                    <span class="tag @tag.CssClass">@tag.Text</span>
-                }
-            </div>
-        }
-
         <div class="post__footer">
-            <a href="/Post/Details/@Model.Id" class="post__action">
-                @Model.CommentCount comments
-            </a>
-
-            <button type="button"
-                    class="post__action"
-                    data-action="share"
-                    data-url="/Post/Details/@Model.Id">
-                Share
-            </button>
-
-            <button type="button"
-                    class="post__action"
-                    data-action="save"
-                    data-post-id="@Model.Id"
-                    data-saved="@(Model.IsSaved.ToString().ToLower())">
-                @(Model.IsSaved ? "Saved" : "Save")
-            </button>
+            <a href="/Post/Details/@Model.Id" class="post__action">@Model.CommentCount comments</a>
+            <button type="button" class="post__action" data-action="share" data-url="/Post/Details/@Model.Id">Share</button>
         </div>
     </div>
 </article>

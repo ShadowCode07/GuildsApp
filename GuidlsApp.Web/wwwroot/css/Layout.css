@@ -77,6 +77,12 @@
     gap: var(--space-sm);
 }
 
+.navbar__auth-links {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
 .page-body {
     max-width: var(--content-max);
     margin: 0 auto;
@@ -151,6 +157,13 @@
     flex-shrink: 0;
 }
 
+.sidebar__empty-copy {
+    padding: 0 18px 16px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 1.5;
+}
+
 .main-content {
     min-width: 0;
 }
@@ -184,6 +197,11 @@
 
     .navbar__right {
         justify-content: flex-end;
+    }
+
+    .navbar__auth-links {
+        justify-content: flex-end;
+        flex-wrap: wrap;
     }
 
     .page-body {

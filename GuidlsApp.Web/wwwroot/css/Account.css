@@ -103,6 +103,12 @@
     margin-top: 8px;
 }
 
+.auth-secondary-actions {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 14px;
+}
+
 .auth-validation {
     color: var(--color-danger);
     font-size: 13px;

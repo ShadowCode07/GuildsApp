@@ -3,6 +3,7 @@ using GuildsApp.Application.Interfaces.Repository;
 using GuildsApp.Application.Interfaces.Security;
 using GuildsApp.Application.MappingProfiles;
 using GuildsApp.Application.Services;
+using GuildsApp.Core.Interfaces;
 using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
 using Microsoft.AspNetCore.CookiePolicy;
@@ -13,7 +14,6 @@ namespace GuildsApp.Web
     {
         public static void Main(string[] args)
         {
-
             var builder = WebApplication.CreateBuilder(args);
 
             //builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
@@ -24,14 +24,19 @@ namespace GuildsApp.Web
             builder.Services.AddScoped<IPostVoteRepository, PostVoteRepository>();
             builder.Services.AddScoped<ISessionRepository, SessionRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IFeedRepository, FeedRepository>();
 
             builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
             builder.Services.AddScoped<IAccountService, AccountService>();
+            builder.Services.AddScoped<ICommunityService, CommunityService>();
             builder.Services.AddScoped<IPostService, PostService>();
+            builder.Services.AddScoped<IFeedService, FeedService>();
 
             builder.Services.AddAutoMapper(cfg =>
             {
                 cfg.AddProfile<PostProfile>();
+                cfg.AddProfile<CommunityProfile>();
+                cfg.AddProfile<FeedProfile>();
             });
 
 

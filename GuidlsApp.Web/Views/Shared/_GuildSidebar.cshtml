@@ -3,31 +3,47 @@
 
 <aside class="sidebar" aria-label="Navigation">
     <div class="sidebar__section">
-        <p class="sidebar__label">My guilds</p>
+        <p class="sidebar__label">@(Model.IsAuthenticated ? "Your guilds" : "Featured guilds")</p>
 
-        @foreach (var guild in Model.MyCommunities)
+        <a href="/Feed/Index" class="sidebar__item @(Model.IsGuildFeed ? "" : "is-active")">
+            <div class="sidebar__item-icon avatar avatar--sm avatar--blue">HF</div>
+            <span>Home feed</span>
+        </a>
+
+        @if (Model.SidebarGuilds.Any())
         {
-            var activeClass = guild.IsActive ? "is-active" : "";
+            @foreach (var guild in Model.SidebarGuilds)
+            {
+                var activeClass = Model.ActiveGuildSlug == guild.Slug ? "is-active" : "";
 
-            <a href="/g/@guild.Slug" class="sidebar__item @activeClass">
-                <div class="sidebar__item-icon avatar avatar--sm @guild.AvatarClass">
-                    @guild.Initials
-                </div>
-                <span>g/@guild.Slug</span>
-            </a>
+                <a href="/g/@guild.Slug" class="sidebar__item @activeClass">
+                    <div class="sidebar__item-icon avatar avatar--sm avatar--blue">
+                        @guild.Slug.Substring(0, Math.Min(2, guild.Slug.Length)).ToUpper()
+                    </div>
+                    <span>g/@guild.Slug</span>
+                </a>
+            }
+        }
+        else
+        {
+            <p class="sidebar__empty-copy">
+                @(Model.IsAuthenticated
+                    ? "Join or create a guild to personalize your feed."
+                    : "Browse public guilds and jump into a community that fits.")
+            </p>
         }
 
-        <a href="/Community/Create" class="sidebar__item">
-            <span>+ Create guild</span>
+        <a href="@(Model.IsAuthenticated ? "/Community/Create" : "/Account/Login")" class="sidebar__item">
+            <span>@(Model.IsAuthenticated ? "+ Create guild" : "Login to create a guild")</span>
         </a>
     </div>
 
     <div class="sidebar__section">
         <p class="sidebar__label">Navigate</p>
 
-        <a href="/Feed/Index" class="sidebar__item is-active">Feed</a>
+        <a href="/Feed/Index" class="sidebar__item @(Model.IsGuildFeed ? "" : "is-active")">Feed</a>
         <a href="/Quest/Index" class="sidebar__item">Quest board</a>
         <a href="/Profile/Index" class="sidebar__item">Profile</a>
-        <a href="/Community/Discover" class="sidebar__item">Discover guilds</a>
+        <a href="/Community/Index" class="sidebar__item">Discover guilds</a>
     </div>
 </aside>

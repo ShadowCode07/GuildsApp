@@ -3,19 +3,46 @@
 
 <aside class="right-col">
     <section class="widget">
-        <div class="widget__header">Active quests</div>
+        <div class="widget__header">Feed context</div>
 
         <div class="widget__body">
-            @foreach (var quest in Model.ActiveQuests)
-            {
-                <div class="quest-item">
-                    <div class="quest-item__icon">☆</div>
+            <p class="widget__text">@Model.FeedDescription</p>
 
-                    <div>
-                        <div class="quest-item__title">@quest.Title</div>
-                        <div class="quest-item__xp">@quest.RewardText · @quest.StatusText</div>
-                    </div>
+            <div class="widget__list">
+                <div class="widget__list-item">
+                    <span class="widget__list-label">Scope</span>
+                    <strong>@(Model.IsGuildFeed ? $"g/{Model.ActiveGuildSlug}" : "All public guilds")</strong>
                 </div>
+
+                <div class="widget__list-item">
+                    <span class="widget__list-label">Posting</span>
+                    <strong>@(Model.CanCreatePost ? "Available" : Model.IsAuthenticated ? "Create or join a guild first" : "Login required")</strong>
+                </div>
+
+                <div class="widget__list-item">
+                    <span class="widget__list-label">Visible posts</span>
+                    <strong>@Model.Posts.Count</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="widget">
+        <div class="widget__header">Quick actions</div>
+
+        <div class="widget__body widget__body--stack">
+            @if (Model.CanCreatePost)
+            {
+                <button type="button" class="btn btn--primary widget__action" data-action="open-create-modal">Create a post</button>
+            }
+            else if (Model.IsAuthenticated)
+            {
+                <a href="/Community/Create" class="btn btn--primary widget__action">Create a guild</a>
+            }
+            else
+            {
+                <a href="/Account/Login" class="btn btn--primary widget__action">Login</a>
+                <a href="/Account/Register" class="btn btn--ghost widget__action">Create account</a>
             }
         </div>
     </section>

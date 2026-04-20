@@ -1,4 +1,4 @@
-﻿@using GuildsApp.Web.Models.Feed
+@using GuildsApp.Web.Models.Feed
 @model FeedPageViewModel
 
 <div class="modal-overlay" id="create-post-modal" aria-hidden="true">
@@ -13,54 +13,78 @@
             </button>
         </div>
 
-        <form id="create-post-form" class="post-composer">
-            @Html.AntiForgeryToken()
+        @if (Model.CanCreatePost)
+        {
+            <form id="create-post-form" class="post-composer">
+                @Html.AntiForgeryToken()
 
-            <div class="post-composer__toprow">
-                <div class="post-composer__guild-wrap">
-                    <label for="create-post-community" class="post-composer__guild-label">Guild</label>
+                <div class="post-composer__toprow">
+                    <div class="post-composer__guild-wrap">
+                        <label for="create-post-community" class="post-composer__guild-label">Guild</label>
 
-                    <select id="create-post-community" name="CommunityId" class="post-composer__select">
-                        @foreach (var guild in Model.MyCommunities)
-                        {
-                            if (guild.IsActive)
+                        <select id="create-post-community" name="CommunityId" class="post-composer__select">
+                            @foreach (var guild in Model.PostableGuilds)
                             {
-                                <option value="@guild.Id" selected>g/@guild.Slug</option>
+                                if (Model.DefaultPostCommunityId == guild.Id)
+                                {
+                                    <option value="@guild.Id" selected>g/@guild.Slug</option>
+                                }
+                                else
+                                {
+                                    <option value="@guild.Id">g/@guild.Slug</option>
+                                }
                             }
-                            else
-                            {
-                                <option value="@guild.Id">g/@guild.Slug</option>
-                            }
-                        }
-                    </select>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="post-composer__tabs">
+                    <button type="button" class="post-composer__tab is-active">Text</button>
+                </div>
+
+                <div class="post-composer__field">
+                    <input type="text"
+                           name="Title"
+                           class="post-composer__title-input"
+                           maxlength="300"
+                           placeholder="Title*" />
+                    <div class="post-composer__counter">
+                        <span id="post-title-count">0</span>/300
+                    </div>
+                </div>
+
+                <div class="post-composer__editor post-composer__editor--plain">
+                    <textarea name="Body"
+                              class="post-composer__textarea post-composer__textarea--plain"
+                              placeholder="Body text*"></textarea>
+                </div>
+
+                <div class="post-composer__actions">
+                    <button type="button" class="btn btn--ghost" data-action="close-create-modal">Cancel</button>
+                    <button type="submit" class="post-composer__submit">Post</button>
+                </div>
+            </form>
+        }
+        else
+        {
+            <div class="post-composer post-composer__empty">
+                <p class="post-composer__empty-copy">
+                    @(Model.IsAuthenticated
+                        ? "Create or join a guild before posting so we know where your conversation belongs."
+                        : "Login first, then join or create a guild to publish your first post.")
+                </p>
+
+                <div class="post-composer__actions">
+                    @if (Model.IsAuthenticated)
+                    {
+                        <a href="/Community/Create" class="post-composer__submit">Create guild</a>
+                    }
+                    else
+                    {
+                        <a href="/Account/Login" class="post-composer__submit">Login</a>
+                    }
                 </div>
             </div>
-
-            <div class="post-composer__tabs">
-                <button type="button" class="post-composer__tab is-active">Text</button>
-            </div>
-
-            <div class="post-composer__field">
-                <input type="text"
-                       name="Title"
-                       class="post-composer__title-input"
-                       maxlength="300"
-                       placeholder="Title*" />
-                <div class="post-composer__counter">
-                    <span id="post-title-count">0</span>/300
-                </div>
-            </div>
-
-            <div class="post-composer__editor post-composer__editor--plain">
-                <textarea name="Body"
-                          class="post-composer__textarea post-composer__textarea--plain"
-                          placeholder="Body text*"></textarea>
-            </div>
-
-            <div class="post-composer__actions">
-                <button type="button" class="btn btn--ghost" data-action="close-create-modal">Cancel</button>
-                <button type="submit" class="post-composer__submit">Post</button>
-            </div>
-        </form>
+        }
     </div>
 </div>

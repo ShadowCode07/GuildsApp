@@ -30,29 +30,38 @@ namespace GuildsApp.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _accountService.LoginAsync(model.Username, model.Password);
-
-            var session = await _accountService.CreateSessionAsync(user.Id, GetClientIp());
-
-            var claims = new List<Claim>
+            try
             {
-                new Claim(ClaimTypes.Name, model.Username),
-                new Claim("UserId", user.Id.ToString()),
-                new Claim("Session_Token", session.SessionToken)
-            };
+                var user = await _accountService.LoginAsync(model.Username, model.Password);
 
-            var identity = new ClaimsIdentity(claims, "AuthCookie");
+                var session = await _accountService.CreateSessionAsync(user.Id, GetClientIp());
 
-            var principal = new ClaimsPrincipal(identity);
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, model.Username),
+                    new Claim("UserId", user.Id.ToString()),
+                    new Claim("Session_Token", session.SessionToken)
+                };
 
-            await HttpContext.SignInAsync("AuthCookie", principal);
+                var identity = new ClaimsIdentity(claims, "AuthCookie");
 
-            return RedirectToAction("Index", "Feed");
+                var principal = new ClaimsPrincipal(identity);
+
+                await HttpContext.SignInAsync("AuthCookie", principal);
+
+                return RedirectToAction("Index", "Feed");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
         }
 
         [HttpGet]
@@ -65,18 +74,28 @@ namespace GuildsApp.Web.Controllers
 
         [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (!ModelState.IsValid)
                 return View(model);
 
-            await _accountService.RegisterAsync(model.Username, model.Password, model.DisplayName);
+            try
+            {
+                await _accountService.RegisterAsync(model.Username, model.Password, model.DisplayName);
 
-            return RedirectToAction("Login", "Account");
+                return RedirectToAction("Login", "Account");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(model);
+            }
         }
 
         [HttpPost]
         [Authorize]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()
         {
             await _accountService.RevokeSession(User.Claims.FirstOrDefault(c => c.Type == "Session_Token")?.Value ?? string.Empty);
