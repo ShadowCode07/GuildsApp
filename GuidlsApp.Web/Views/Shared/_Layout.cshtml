@@ -1,20 +1,31 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - GuildsApp</title>
 
-    <link rel="stylesheet" href="~/css/Variable.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Base.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Component.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Account.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/tokens.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/reset.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/utilities.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/app-layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ui-buttons.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/ui-forms.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/page-sections.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/feed.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/post-card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/panel-card.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dialog.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/auth.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/community.css" asp-append-version="true" />
 </head>
 <body>
     @RenderBody()
 
-    <script src="~/js/App.js" asp-append-version="true"></script>
+    <script src="~/js/app-core.js" asp-append-version="true"></script>
+    <script src="~/js/feed-ui.js" asp-append-version="true"></script>
+    <script src="~/js/post-dialog.js" asp-append-version="true"></script>
+    <script src="~/js/post-form.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

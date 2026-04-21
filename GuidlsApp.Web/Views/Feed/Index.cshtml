@@ -8,15 +8,15 @@
 <div class="app-shell">
     <partial name="_Topbar" model="Model" />
 
-    <div class="page-body">
+    <div class="app-layout">
         <partial name="_GuildSidebar" model="Model" />
 
-        <main class="main-content">
-            <section class="feed-heading">
+        <main class="content-area">
+            <section class="section-header section-header--feed">
                 <div>
-                    <p class="feed-heading__eyebrow">@(Model.IsGuildFeed ? "Guild feed" : "Public feed")</p>
-                    <h1>@Model.FeedTitle</h1>
-                    <p>@Model.FeedDescription</p>
+                    <p class="section-header__eyebrow">@(Model.IsGuildFeed ? "Guild feed" : "Public feed")</p>
+                    <h1 class="section-header__title">@Model.FeedTitle</h1>
+                    <p class="section-header__text">@Model.FeedDescription</p>
                 </div>
 
                 @if (Model.CanCreatePost)
@@ -33,12 +33,12 @@
                 }
             </section>
 
-            <div class="sort-bar">
+            <div class="feed-toolbar">
                 <button type="button" class="btn btn--ghost is-active" data-action="sort" data-sort="hot">Hot</button>
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="new">New</button>
                 <button type="button" class="btn btn--ghost" data-action="sort" data-sort="top">Top</button>
-                <div class="sort-bar__spacer"></div>
-                <span class="sort-bar__meta">
+                <div class="feed-toolbar__spacer"></div>
+                <span class="feed-toolbar__meta">
                     @(Model.IsGuildFeed
                         ? "Only posts from this guild are shown."
                         : "Posts from public guilds appear here.")
@@ -54,9 +54,9 @@
             }
             else
             {
-                <div class="empty-state">
-                    <h2 class="empty-state__title">No posts yet</h2>
-                    <p class="empty-state__text">
+                <div class="state-empty">
+                    <h2 class="state-empty__title">No posts yet</h2>
+                    <p class="state-empty__text">
                         @(Model.IsGuildFeed
                             ? "This guild does not have any posts yet. Be the first to start the conversation."
                             : "The public feed is quiet right now. Try another guild or create a post once you join one.")

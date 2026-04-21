@@ -1,11 +1,11 @@
-﻿@using GuildsApp.Web.Models.Feed
+@using GuildsApp.Web.Models.Feed
 @model FeedPageViewModel
 
-<header class="navbar">
-    <a href="/Feed/Index" class="navbar__brand">Guildle</a>
+<header class="topbar">
+    <a href="/Feed/Index" class="topbar__brand">Guildle</a>
 
-    <div class="navbar__search">
-        <span class="navbar__search-icon">
+    <div class="topbar__search">
+        <span class="topbar__search-icon">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                 <path d="M21 21L16.65 16.65M18 11C18 14.866 14.866 18 11 18C7.134 18 4 14.866 4 11C4 7.134 7.134 4 11 4C14.866 4 18 7.134 18 11Z"
                       stroke="currentColor"
@@ -15,31 +15,31 @@
             </svg>
         </span>
 
-        <input id="guild-search-input"
+        <input id="site-search-input"
                type="text"
                value="@Model.SearchQuery"
                placeholder="Search guilds..." />
 
-        <div id="guild-search-dropdown" class="search-dropdown"></div>
+        <div id="site-search-results" class="search-results"></div>
     </div>
 
-    <div class="navbar__right">
+    <div class="topbar__actions">
         @if (User.Identity != null && User.Identity.IsAuthenticated)
         {
             <a href="/Profile/Index" class="avatar avatar--md avatar--blue">
                 @(User.Identity.Name != null && User.Identity.Name.Length >= 2
-                            ? User.Identity.Name.Substring(0, 2).ToUpper()
-                            : "ME")
-        </a>
+                    ? User.Identity.Name.Substring(0, 2).ToUpper()
+                    : "ME")
+            </a>
 
-            <form method="post" action="/Account/Logout" class="navbar__logout-form">
+            <form method="post" action="/Account/Logout" class="topbar__logout">
                 @Html.AntiForgeryToken()
                 <button type="submit" class="btn btn--outline">Logout</button>
             </form>
         }
         else
         {
-            <div class="navbar__auth-links">
+            <div class="topbar__auth">
                 <a href="/Account/Login" class="btn btn--outline">Login</a>
                 <a href="/Account/Register" class="btn btn--light">Create account</a>
             </div>

@@ -1,0 +1,115 @@
+.form-group {
+    margin-bottom: var(--space-md);
+}
+
+.form-label {
+    display: block;
+    margin-bottom: var(--space-xs);
+    color: var(--color-text-secondary);
+    font-size: var(--text-sm);
+    font-weight: 600;
+}
+
+.form-input {
+    width: 100%;
+    height: 40px;
+    padding: 0 12px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-size: var(--text-base);
+    transition: border-color var(--transition);
+}
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--color-primary);
+    }
+
+.form-textarea {
+    width: 100%;
+    padding: 12px;
+    background: var(--color-bg-input);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    transition: border-color var(--transition);
+}
+
+    .form-textarea:focus {
+        outline: none;
+        border-color: var(--color-primary);
+    }
+
+.form-checkbox {
+    width: 18px;
+    height: 18px;
+    margin-top: 2px;
+    accent-color: var(--color-primary);
+}
+
+.form-check {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.form-check__copy {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}
+
+.form-error {
+    display: block;
+    margin-top: 4px;
+    color: var(--color-danger);
+    font-size: 13px;
+}
+
+.form-alert {
+    margin-bottom: 16px;
+    padding: 10px 12px;
+    background: var(--color-danger-bg);
+    border: 1px solid #f5c9c3;
+    border-radius: var(--radius-sm);
+    color: var(--color-danger);
+    font-size: 13px;
+}
+
+.form-card {
+    max-width: 900px;
+    background: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+}
+
+.form-card__header {
+    padding: 22px 24px 12px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.form-card__title {
+    margin-bottom: 6px;
+    font-size: 26px;
+}
+
+.form-card__subtitle {
+    color: var(--color-text-secondary);
+    font-size: 14px;
+}
+
+.form-card__body {
+    padding: 24px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}

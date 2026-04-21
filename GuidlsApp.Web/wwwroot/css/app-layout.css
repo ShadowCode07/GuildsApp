@@ -1,89 +1,96 @@
-﻿.app-shell {
+.app-shell {
     min-height: 100vh;
 }
 
-.navbar {
+.topbar {
     position: sticky;
     top: 0;
     z-index: 100;
-    height: var(--nav-height);
-    background: var(--color-primary);
     display: grid;
     grid-template-columns: 140px 1fr 140px;
     align-items: center;
     gap: var(--space-md);
+    height: var(--nav-height);
     padding: 0 var(--space-lg);
+    background: var(--color-primary);
     border-bottom: 1px solid var(--color-primary-dark);
 }
 
-.navbar__brand {
+.topbar__brand {
+    justify-self: start;
     color: var(--color-text-on-primary);
     font-size: 20px;
     font-weight: 700;
-    justify-self: start;
 }
 
-    .navbar__brand:hover {
+    .topbar__brand:hover {
         text-decoration: none;
     }
 
-.navbar__search {
+.topbar__search {
+    position: relative;
     width: 100%;
     max-width: 560px;
     justify-self: center;
-    position: relative;
 }
 
-    .navbar__search form {
-        width: 100%;
-    }
-
-.navbar__search-icon {
+.topbar__search-icon {
     position: absolute;
-    left: 14px;
     top: 50%;
+    left: 14px;
     transform: translateY(-50%);
-    color: rgba(255,255,255,0.7);
-    pointer-events: none;
+    color: rgba(255, 255, 255, 0.7);
     display: flex;
+    pointer-events: none;
 }
 
-.navbar__search input {
+.topbar__search input {
     width: 100%;
     height: 40px;
     padding: 0 14px 0 40px;
-    background: rgba(255,255,255,0.16);
-    border: 1px solid rgba(255,255,255,0.35);
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.35);
     border-radius: var(--radius-pill);
     color: #fff;
     font-size: 15px;
     transition: background var(--transition), border-color var(--transition);
 }
 
-    .navbar__search input::placeholder {
-        color: rgba(255,255,255,0.78);
+    .topbar__search input::placeholder {
+        color: rgba(255, 255, 255, 0.78);
     }
 
-    .navbar__search input:focus {
+    .topbar__search input:focus {
         outline: none;
-        background: rgba(255,255,255,0.24);
-        border-color: rgba(255,255,255,0.7);
+        background: rgba(255, 255, 255, 0.24);
+        border-color: rgba(255, 255, 255, 0.7);
     }
 
-.navbar__right {
+.search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+}
+
+    .search-results:empty {
+        display: none;
+    }
+
+.topbar__actions {
     justify-self: end;
     display: flex;
     align-items: center;
     gap: var(--space-sm);
 }
 
-.navbar__auth-links {
+.topbar__auth {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
-.page-body {
+.app-layout {
     max-width: var(--content-max);
     margin: 0 auto;
     padding: var(--space-lg);
@@ -93,123 +100,113 @@
     align-items: start;
 }
 
-.sidebar {
-    background: var(--color-bg-sidebar);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    overflow: hidden;
+.nav-panel {
     align-self: start;
     position: sticky;
     top: calc(var(--nav-height) + var(--space-lg));
+    background: var(--color-bg-sidebar);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
     box-shadow: var(--shadow-sm);
+    overflow: hidden;
 }
 
-.sidebar__section {
-    padding: 0;
+.nav-panel__section + .nav-panel__section {
+    border-top: 1px solid var(--color-border);
 }
 
-    .sidebar__section + .sidebar__section {
-        border-top: 1px solid var(--color-border);
-    }
-
-.sidebar__label {
+.nav-panel__label {
+    padding: 18px 18px 12px;
+    color: var(--color-secondary);
     font-size: var(--text-sm);
     font-weight: 700;
-    color: var(--color-secondary);
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    padding: 18px 18px 12px;
 }
 
-.sidebar__item {
+.nav-panel__link {
     display: flex;
     align-items: center;
     gap: 12px;
     padding: 13px 18px;
-    font-size: 16px;
-    color: #31456f;
     border-left: 3px solid transparent;
-    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    color: #31456f;
+    font-size: 16px;
     text-decoration: none;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
 }
 
-    .sidebar__item:hover {
+    .nav-panel__link:hover {
         background: #f5f8ff;
         text-decoration: none;
     }
 
-    .sidebar__item.is-active {
+    .nav-panel__link.is-active {
         background: var(--color-primary-light);
         border-left-color: var(--color-primary);
         color: var(--color-primary);
         font-weight: 600;
     }
 
-.sidebar__item-icon {
+.nav-panel__icon {
     width: 30px;
     height: 30px;
-    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: var(--text-xs);
     font-weight: 700;
+    border-radius: 8px;
     flex-shrink: 0;
 }
 
-.sidebar__empty-copy {
+.nav-panel__note {
     padding: 0 18px 16px;
     color: var(--color-text-secondary);
     font-size: 14px;
     line-height: 1.5;
 }
 
-.main-content {
-    min-width: 0;
-}
-
-.right-col {
+.content-area,
+.side-panel {
     min-width: 0;
 }
 
 @media (max-width: 1150px) {
-    .page-body {
+    .app-layout {
         grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
     }
 
-    .right-col {
+    .side-panel {
         display: none;
     }
 }
 
 @media (max-width: 820px) {
-    .navbar {
+    .topbar {
         grid-template-columns: 1fr;
         height: auto;
         padding: 12px 16px;
     }
 
-    .navbar__brand,
-    .navbar__search,
-    .navbar__right {
+    .topbar__brand,
+    .topbar__search,
+    .topbar__actions {
         justify-self: stretch;
     }
 
-    .navbar__right {
-        justify-content: flex-end;
-    }
-
-    .navbar__auth-links {
+    .topbar__actions,
+    .topbar__auth {
         justify-content: flex-end;
         flex-wrap: wrap;
     }
 
-    .page-body {
+    .app-layout {
         grid-template-columns: 1fr;
         padding: 16px;
     }
 
-    .sidebar {
+    .nav-panel {
         position: static;
     }
 }

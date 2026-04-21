@@ -78,9 +78,7 @@ namespace GuildsApp.Infrastructure
                 WHERE c.Slug = @Slug
                   AND c.IsArchived = 0";
 
-            return await conn.QueryFirstOrDefaultAsync<FeedGuildQueryModel>(
-                sql,
-                new { Slug = slug, UserId = userId });
+            return await conn.QueryFirstOrDefaultAsync<FeedGuildQueryModel>(sql, new { Slug = slug, UserId = userId });
         }
 
         public async Task<IEnumerable<GuildSearchQueryModel>> SearchGuildsAsync(string query, int? userId)
@@ -112,9 +110,7 @@ namespace GuildsApp.Infrastructure
                     CASE WHEN c.Slug LIKE @Query + '%' THEN 0 ELSE 1 END,
                     c.Name";
 
-            return await conn.QueryAsync<GuildSearchQueryModel>(
-                sql,
-                new { Query = query, UserId = userId });
+            return await conn.QueryAsync<GuildSearchQueryModel>(sql, new { Query = query, UserId = userId });
         }
 
         public async Task<IEnumerable<FeedPostQueryModel>> GetMixedFeedAsync(int? userId)
@@ -193,9 +189,7 @@ namespace GuildsApp.Infrastructure
                     p.IsPinned DESC,
                     p.CreatedAt DESC";
 
-            return await conn.QueryAsync<FeedPostQueryModel>(
-                sql,
-                new { Slug = slug, UserId = userId });
+            return await conn.QueryAsync<FeedPostQueryModel>(sql, new { Slug = slug, UserId = userId });
         }
     }
 }

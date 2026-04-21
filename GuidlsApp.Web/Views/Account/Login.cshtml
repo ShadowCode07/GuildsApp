@@ -1,24 +1,24 @@
-﻿@using GuildsApp.Web.Models.User
+@using GuildsApp.Web.Models.User
 @model LoginViewModel
 
 @{
     ViewData["Title"] = "Login";
 }
 
-<div class="auth-page">
-    <div class="auth-card">
-        <div class="auth-card__header">
-            <a href="/Feed/Index" class="auth-card__brand">Guildle</a>
-            <div class="auth-card__subtitle">Join the discussion and start contributing.</div>
+<div class="auth-shell">
+    <div class="auth-panel">
+        <div class="auth-panel__header">
+            <a href="/Feed/Index" class="auth-panel__brand">Guildle</a>
+            <div class="auth-panel__subtitle">Join the discussion and start contributing.</div>
         </div>
 
-        <div class="auth-card__body">
-            <h1 class="auth-title">Welcome back</h1>
-            <p class="auth-text">Log in to continue to your guilds and feed.</p>
+        <div class="auth-panel__body">
+            <h1 class="auth-panel__title">Welcome back</h1>
+            <p class="auth-panel__text">Log in to continue to your guilds and feed.</p>
 
             @if (!ViewData.ModelState.IsValid)
             {
-                <div class="auth-validation-summary">
+                <div class="form-alert">
                     @Html.ValidationSummary(excludePropertyErrors: true, message: "Please check your username and password and try again.")
                 </div>
             }
@@ -27,26 +27,26 @@
                 <div class="form-group">
                     <label asp-for="Username" class="form-label"></label>
                     <input asp-for="Username" class="form-input" autocomplete="username" />
-                    <span asp-validation-for="Username" class="auth-validation"></span>
+                    <span asp-validation-for="Username" class="form-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Password" class="form-label"></label>
                     <input asp-for="Password" type="password" class="form-input" autocomplete="current-password" />
-                    <span asp-validation-for="Password" class="auth-validation"></span>
+                    <span asp-validation-for="Password" class="form-error"></span>
                 </div>
 
-                <div class="auth-actions">
+                <div class="auth-panel__actions">
                     <button type="submit" class="btn btn--primary">Login</button>
                 </div>
             </form>
 
-            <div class="auth-switch">
+            <div class="auth-panel__switch">
                 Don’t have an account?
                 <a asp-action="Register">Create one</a>
             </div>
 
-            <div class="auth-secondary-actions">
+            <div class="auth-panel__secondary">
                 <a href="/Feed/Index">Browse the public home feed</a>
             </div>
         </div>

@@ -1,14 +1,14 @@
-﻿@model GuildsApp.Application.DTOs.FeedDTOs.FeedPostDto
+@model GuildsApp.Application.DTOs.FeedDTOs.FeedPostDto
 
-<article class="post" data-post-id="@Model.Id">
-    <div class="post__vote">
-        <button type="button" class="post__vote-btn post__vote-btn--up" data-action="vote" data-value="1" aria-label="Upvote">▲</button>
-        <div class="post__vote-count">@Model.Score</div>
-        <button type="button" class="post__vote-btn post__vote-btn--down" data-action="vote" data-value="-1" aria-label="Downvote">▼</button>
+<article class="post-card" data-post-id="@Model.Id">
+    <div class="post-card__vote">
+        <button type="button" class="post-card__vote-button post-card__vote-button--up" data-action="vote" data-value="1" aria-label="Upvote">▲</button>
+        <div class="post-card__vote-count">@Model.Score</div>
+        <button type="button" class="post-card__vote-button post-card__vote-button--down" data-action="vote" data-value="-1" aria-label="Downvote">▼</button>
     </div>
 
-    <div class="post__body">
-        <div class="post__meta">
+    <div class="post-card__body">
+        <div class="post-card__meta">
             Posted by <a href="/u/@Model.AuthorUsername">u/@Model.AuthorUsername</a>
             in <a href="/g/@Model.CommunitySlug">g/@Model.CommunitySlug</a>
             · @Model.CreatedAt.ToLocalTime().ToString("g")
@@ -19,13 +19,13 @@
             }
         </div>
 
-        <h2 class="post__title">
+        <h2 class="post-card__title">
             <a href="/Post/Details/@Model.Id">@Model.Title</a>
         </h2>
 
-        <div class="post__footer">
-            <a href="/Post/Details/@Model.Id" class="post__action">@Model.CommentCount comments</a>
-            <button type="button" class="post__action" data-action="share" data-url="/Post/Details/@Model.Id">Share</button>
+        <div class="post-card__footer">
+            <a href="/Post/Details/@Model.Id" class="post-card__action">@Model.CommentCount comments</a>
+            <button type="button" class="post-card__action" data-action="share" data-url="/Post/Details/@Model.Id">Share</button>
         </div>
     </div>
 </article>

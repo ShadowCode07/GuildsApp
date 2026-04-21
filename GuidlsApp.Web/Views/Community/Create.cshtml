@@ -4,12 +4,12 @@
     ViewData["Title"] = "Create guild";
 }
 
-<div class="community-shell">
-    <section class="community-header">
+<div class="page-shell">
+    <section class="section-header">
         <div>
-            <p class="community-header__eyebrow">Guild setup</p>
-            <h1 class="community-header__title">Create a new guild</h1>
-            <p class="community-header__text">
+            <p class="section-header__eyebrow">Guild setup</p>
+            <h1 class="section-header__title">Create a new guild</h1>
+            <p class="section-header__text">
                 Build a home for a focused community. Once created, its feed will show only posts from that guild.
             </p>
         </div>
@@ -17,38 +17,38 @@
         <a href="/Feed/Index" class="btn btn--ghost">Back to feed</a>
     </section>
 
-    <section class="editor-card">
-        <div class="editor-card__header">
-            <h2 class="editor-card__title">Guild details</h2>
-            <p class="editor-card__subtitle">Keep the name and slug clear so people can discover and revisit it easily.</p>
+    <section class="form-card">
+        <div class="form-card__header">
+            <h2 class="form-card__title">Guild details</h2>
+            <p class="form-card__subtitle">Keep the name and slug clear so people can discover and revisit it easily.</p>
         </div>
 
-        <div class="editor-card__body">
+        <div class="form-card__body">
             <form asp-action="Create" method="post">
-                <div asp-validation-summary="ModelOnly" class="auth-validation-summary"></div>
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
 
                 <div class="form-group">
                     <label asp-for="Name" class="form-label"></label>
                     <input asp-for="Name" class="form-input" />
-                    <span asp-validation-for="Name" class="auth-validation"></span>
+                    <span asp-validation-for="Name" class="form-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Slug" class="form-label"></label>
                     <input asp-for="Slug" class="form-input" />
-                    <span asp-validation-for="Slug" class="auth-validation"></span>
+                    <span asp-validation-for="Slug" class="form-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Description" class="form-label"></label>
                     <textarea asp-for="Description" class="form-textarea" rows="4"></textarea>
-                    <span asp-validation-for="Description" class="auth-validation"></span>
+                    <span asp-validation-for="Description" class="form-error"></span>
                 </div>
 
                 <div class="form-group">
                     <label asp-for="Rules" class="form-label"></label>
                     <textarea asp-for="Rules" class="form-textarea" rows="6"></textarea>
-                    <span asp-validation-for="Rules" class="auth-validation"></span>
+                    <span asp-validation-for="Rules" class="form-error"></span>
                 </div>
 
                 <div class="form-group form-check">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
 
-                <div class="editor-form__actions">
+                <div class="form-actions">
                     <a href="/Feed/Index" class="btn btn--ghost">Cancel</a>
                     <button type="submit" class="btn btn--primary">Create guild</button>
                 </div>

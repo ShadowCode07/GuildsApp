@@ -1,0 +1,55 @@
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    min-height: 100vh;
+    background: var(--color-bg-page);
+    color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    line-height: 1.5;
+}
+
+a {
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+    a:hover {
+        text-decoration: underline;
+    }
+
+button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: var(--font-sans);
+}
+
+input, textarea, select {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+}
+
+ul, ol {
+    list-style: none;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+h1, h2, h3, h4, h5 {
+    color: var(--color-text-primary);
+    font-weight: 600;
+    line-height: 1.3;
+}
