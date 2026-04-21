@@ -121,6 +121,7 @@ namespace GuildsApp.Infrastructure
                 SELECT
                     p.Id,
                     p.Score,
+                    CAST(COALESCE(pv.Value, 0) AS int) AS CurrentUserVote,
                     p.Title,
                     u.Username AS AuthorUsername,
                     c.Slug AS CommunitySlug,
@@ -139,6 +140,9 @@ namespace GuildsApp.Infrastructure
                 LEFT JOIN CommunityMember cm
                     ON cm.CommunityId = c.Id
                    AND cm.UserId = @UserId
+                LEFT JOIN PostVote pv
+                    ON pv.PostId = p.Id
+                   AND pv.UserId = @UserId
                 WHERE p.IsDeleted = 0
                   AND c.IsArchived = 0
                   AND (
@@ -160,6 +164,7 @@ namespace GuildsApp.Infrastructure
                 SELECT
                     p.Id,
                     p.Score,
+                    CAST(COALESCE(pv.Value, 0) AS int) AS CurrentUserVote,
                     p.Title,
                     u.Username AS AuthorUsername,
                     c.Slug AS CommunitySlug,
@@ -178,6 +183,9 @@ namespace GuildsApp.Infrastructure
                 LEFT JOIN CommunityMember cm
                     ON cm.CommunityId = c.Id
                    AND cm.UserId = @UserId
+                LEFT JOIN PostVote pv
+                    ON pv.PostId = p.Id
+                   AND pv.UserId = @UserId
                 WHERE p.IsDeleted = 0
                   AND c.IsArchived = 0
                   AND c.Slug = @Slug

@@ -10,6 +10,7 @@ namespace GuildsApp.Core.QueryModels
     {
         public int Id { get; set; }
         public int Score { get; set; }
+        public int CurrentUserVote { get; set; }
         public string Title { get; set; } = string.Empty;
         public string AuthorUsername { get; set; } = string.Empty;
         public string CommunitySlug { get; set; } = string.Empty;

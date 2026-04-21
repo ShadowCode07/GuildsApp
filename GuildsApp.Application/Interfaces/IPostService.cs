@@ -19,5 +19,6 @@ namespace GuildsApp.Application.Interfaces
         Task Unpin(int postId);
         Task UpVote(int postId, int userId);
         Task DownVote(int postId, int userId);
+        Task<PostVoteResultDto> Vote(int postId, int userId, sbyte value);
     }
 }

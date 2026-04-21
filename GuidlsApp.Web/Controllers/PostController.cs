@@ -193,5 +193,45 @@ namespace GuildsApp.Web.Controllers
             await _postService.DownVote(id, GetUserId());
             return RedirectToAction(nameof(Details), new { id });
         }
+
+        [HttpPost]
+        public async Task<IActionResult> VoteAjax([FromBody] PostVoteRequest request)
+        {
+            if (request == null || request.PostId <= 0 || (request.Value != 1 && request.Value != -1))
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = "Invalid vote request."
+                });
+            }
+
+            try
+            {
+                var result = await _postService.Vote(request.PostId, GetUserId(), (sbyte)request.Value);
+
+                return Ok(new
+                {
+                    success = true,
+                    postId = result.PostId,
+                    score = result.Score,
+                    currentUserVote = result.CurrentUserVote
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+        }
+
+        public class PostVoteRequest
+        {
+            public int PostId { get; set; }
+            public int Value { get; set; }
+        }
     }
 }

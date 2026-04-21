@@ -39,10 +39,29 @@ namespace GuildsApp.Infrastructure
         public async Task<bool> RemoveAsync(int postId, int userId)
         {
             using var conn = CreateConnection();
-            var sql = "DELETE FROM [PostVote] WHERE [PostId] = @PostId AND [UserId] = @UserId";
-            
-            var rows = await conn.ExecuteAsync(sql, new { PostId = postId, UserId = userId });
-            return rows > 0;
+            await conn.OpenAsync();
+            using var transaction = conn.BeginTransaction();
+
+            try
+            {
+                var deleteSql = "DELETE FROM [PostVote] WHERE [PostId] = @PostId AND [UserId] = @UserId";
+                var rows = await conn.ExecuteAsync(deleteSql, new { PostId = postId, UserId = userId }, transaction);
+
+                var scoreSql = @"
+                    UPDATE [Post]
+                    SET [Score] = (SELECT COALESCE(SUM([Value]), 0) FROM [PostVote] WHERE [PostId] = @PostId)
+                    WHERE [Id] = @PostId";
+
+                await conn.ExecuteAsync(scoreSql, new { PostId = postId }, transaction);
+                await transaction.CommitAsync();
+
+                return rows > 0;
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+                return false;
+            }
         }
 
         public async Task<bool> UpsertAsync(PostVote vote)
@@ -63,10 +82,10 @@ namespace GuildsApp.Infrastructure
 
                 var scoreSql = @"
                     UPDATE [Post] 
-                    SET [Score] = (SELECT COALESCE(SUM(Value), 0) FROM [PostVote] WHERE [PostId] = @PostId)
-                    WHERE [PostId] = @PostId";
+                    SET [Score] = (SELECT COALESCE(SUM([Value]), 0) FROM [PostVote] WHERE [PostId] = @PostId)
+                    WHERE [Id] = @PostId";
 
-                await conn.ExecuteAsync(scoreSql, new { vote.PostId }, transaction);
+                await conn.ExecuteAsync(scoreSql, new { PostId = vote.PostId }, transaction);
 
                 await transaction.CommitAsync();
                 return true;

@@ -2,7 +2,7 @@
     'use strict';
 
     function initVoting() {
-        document.addEventListener('click', function (event) {
+        document.addEventListener('click', async function (event) {
             var button = event.target.closest('[data-action="vote"]');
             if (!button) {
                 return;
@@ -16,18 +16,59 @@
             var countElement = postCard.querySelector('.post-card__vote-count');
             var upButton = postCard.querySelector('.post-card__vote-button--up');
             var downButton = postCard.querySelector('.post-card__vote-button--down');
-
-            var currentVote = upButton.classList.contains('is-voted') ? 1 :
-                downButton.classList.contains('is-voted') ? -1 : 0;
-
+            var postId = parseInt(postCard.dataset.postId, 10);
             var nextVote = parseInt(button.dataset.value, 10);
-            var appliedVote = currentVote === nextVote ? 0 : nextVote;
-            var delta = appliedVote - currentVote;
-            var currentScore = parseInt(countElement.textContent, 10) || 0;
 
-            countElement.textContent = (currentScore + delta).toString();
-            upButton.classList.toggle('is-voted', appliedVote === 1);
-            downButton.classList.toggle('is-voted', appliedVote === -1);
+            if (!postId || !nextVote) {
+                return;
+            }
+
+            button.disabled = true;
+
+            try {
+                var response = await fetch('/Post/VoteAjax', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        postId: postId,
+                        value: nextVote
+                    })
+                });
+
+                var result = null;
+
+                try {
+                    result = await response.json();
+                } catch {
+                    result = null;
+                }
+
+                if (response.status === 401 || (response.redirected && response.url.indexOf('/Account/Login') !== -1)) {
+                    window.location.href = '/Account/Login';
+                    return;
+                }
+
+                if (!response.ok || !result || !result.success) {
+                    throw new Error(result && result.message ? result.message : 'Failed to save vote.');
+                }
+
+                countElement.textContent = result.score.toString();
+                upButton.classList.toggle('is-voted', result.currentUserVote === 1);
+                downButton.classList.toggle('is-voted', result.currentUserVote === -1);
+            } catch (error) {
+                console.error(error);
+
+                if (window.appUi && typeof window.appUi.showToast === 'function') {
+                    window.appUi.showToast(error.message || 'Unable to save vote.');
+                } else {
+                    alert(error.message || 'Unable to save vote.');
+                }
+            } finally {
+                button.disabled = false;
+            }
         });
     }
 

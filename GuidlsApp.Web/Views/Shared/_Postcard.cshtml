@@ -2,9 +2,21 @@
 
 <article class="post-card" data-post-id="@Model.Id">
     <div class="post-card__vote">
-        <button type="button" class="post-card__vote-button post-card__vote-button--up" data-action="vote" data-value="1" aria-label="Upvote">▲</button>
+        <button type="button"
+                class="post-card__vote-button post-card__vote-button--up @(Model.CurrentUserVote == 1 ? "is-voted" : "")"
+                data-action="vote"
+                data-value="1"
+                aria-label="Upvote">
+            ▲
+        </button>
         <div class="post-card__vote-count">@Model.Score</div>
-        <button type="button" class="post-card__vote-button post-card__vote-button--down" data-action="vote" data-value="-1" aria-label="Downvote">▼</button>
+        <button type="button"
+                class="post-card__vote-button post-card__vote-button--down @(Model.CurrentUserVote == -1 ? "is-voted" : "")"
+                data-action="vote"
+                data-value="-1"
+                aria-label="Downvote">
+            ▼
+        </button>
     </div>
 
     <div class="post-card__body">

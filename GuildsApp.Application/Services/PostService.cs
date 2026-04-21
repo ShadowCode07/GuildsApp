@@ -11,13 +11,15 @@ namespace GuildsApp.Application.Services
         private readonly IPostRepository _postRepository;
         private readonly IPostVoteRepository _postVoteRepository;
         private readonly ICommunityMemberRepository _communityMemberRepository;
+        private readonly ICommunityRepository _communityRepository;
         private readonly IMapper _mapper;
 
-        public PostService(IPostRepository postRepository, IPostVoteRepository postVoteRepository, ICommunityMemberRepository communityMemberRepository, IMapper mapper)
+        public PostService(IPostRepository postRepository, IPostVoteRepository postVoteRepository, ICommunityMemberRepository communityMemberRepository, ICommunityRepository communityRepository, IMapper mapper)
         {
             _postRepository = postRepository;
             _postVoteRepository = postVoteRepository;
             _communityMemberRepository = communityMemberRepository;
+            _communityRepository = communityRepository;
             _mapper = mapper;
         }
 
@@ -26,6 +28,20 @@ namespace GuildsApp.Application.Services
             var isMember = await _communityMemberRepository.IsMemberAsync(userId, communityId);
             if (!isMember)
                 throw new UnauthorizedAccessException("User is not a member of this guild.");
+        }
+
+        private async Task EnsureCanVoteAsync(int communityId, int userId)
+        {
+            var community = await _communityRepository.GetByIdAsync(communityId)
+                ?? throw new KeyNotFoundException($"Guild {communityId} not found.");
+
+            if (community.IsArchived)
+                throw new InvalidOperationException("This guild is archived.");
+
+            if (!community.IsPrivate)
+                return;
+
+            await EnsureMemberAsync(communityId, userId);
         }
 
         private async Task<Post> GetActivePostAsync(int postId)
@@ -116,36 +132,56 @@ namespace GuildsApp.Application.Services
 
         public async Task UpVote(int postId, int userId)
         {
-            var post = await GetActivePostAsync(postId);
-            await EnsureMemberAsync(post.CommunityId, userId);
-
-            var existingVote = await _postVoteRepository.GetAsync(postId, userId);
-            if (existingVote?.Value == 1)
-                return;
-
-            await _postVoteRepository.UpsertAsync(new PostVote
-            {
-                PostId = postId,
-                UserId = userId,
-                Value = 1
-            });
+            await Vote(postId, userId, 1);
         }
 
         public async Task DownVote(int postId, int userId)
         {
+            await Vote(postId, userId, -1);
+        }
+
+        public async Task<PostVoteResultDto> Vote(int postId, int userId, sbyte value)
+        {
+            if (value is not (sbyte)1 and not (sbyte)-1)
+                throw new ArgumentOutOfRangeException(nameof(value), "Vote value must be 1 or -1.");
+
             var post = await GetActivePostAsync(postId);
-            await EnsureMemberAsync(post.CommunityId, userId);
+            await EnsureCanVoteAsync(post.CommunityId, userId);
 
             var existingVote = await _postVoteRepository.GetAsync(postId, userId);
-            if (existingVote?.Value == -1)
-                return;
+            sbyte currentUserVote;
 
-            await _postVoteRepository.UpsertAsync(new PostVote
+            if (existingVote != null && existingVote.Value == value)
+            {
+                var removed = await _postVoteRepository.RemoveAsync(postId, userId);
+                if (!removed)
+                    throw new InvalidOperationException("Failed to remove vote.");
+
+                currentUserVote = 0;
+            }
+            else
+            {
+                var saved = await _postVoteRepository.UpsertAsync(new PostVote
+                {
+                    PostId = postId,
+                    UserId = userId,
+                    Value = value
+                });
+
+                if (!saved)
+                    throw new InvalidOperationException("Failed to save vote.");
+
+                currentUserVote = value;
+            }
+
+            var refreshedPost = await GetActivePostAsync(postId);
+
+            return new PostVoteResultDto
             {
                 PostId = postId,
-                UserId = userId,
-                Value = -1
-            });
+                Score = refreshedPost.Score,
+                CurrentUserVote = currentUserVote
+            };
         }
     }
 }
