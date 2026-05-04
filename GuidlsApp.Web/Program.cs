@@ -6,6 +6,7 @@ using GuildsApp.Application.Services;
 using GuildsApp.Core.Interfaces;
 using GuildsApp.Infrastructure;
 using GuildsApp.Infrastructure.Security;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.CookiePolicy;
 
 namespace GuildsApp.Web
@@ -53,6 +54,34 @@ namespace GuildsApp.Web
                     options.Cookie.HttpOnly = true;
                     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                     options.Cookie.SameSite = SameSiteMode.Strict;
+
+                    options.Events.OnValidatePrincipal = async context =>
+                    {
+                        var sessionToken = context.Principal?
+                            .Claims.FirstOrDefault(c => c.Type == "Session_Token")?.Value;
+                        var userIdClaim = context.Principal?
+                            .Claims.FirstOrDefault(c => c.Type == "UserId")?.Value;
+
+                        if (string.IsNullOrWhiteSpace(sessionToken) ||
+                            !int.TryParse(userIdClaim, out var userId))
+                        {
+                            context.RejectPrincipal();
+                            await context.HttpContext.SignOutAsync("AuthCookie");
+                            return;
+                        }
+
+                        var sessionRepository = context.HttpContext.RequestServices
+                            .GetRequiredService<ISessionRepository>();
+
+                        var session = await sessionRepository.GetByTokenAsync(sessionToken);
+
+                        if (session == null || session.UserId != userId)
+                        {
+                            context.RejectPrincipal();
+                            await context.HttpContext.SignOutAsync("AuthCookie");
+                            return;
+                        }
+                    };
                 });
 
             var app = builder.Build();
