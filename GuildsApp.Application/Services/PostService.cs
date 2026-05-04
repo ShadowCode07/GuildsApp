@@ -44,6 +44,26 @@ namespace GuildsApp.Application.Services
             await EnsureMemberAsync(communityId, userId);
         }
 
+        private async Task CanManageGuildAsync(int communityId, int userId)
+        {
+            var community = await _communityRepository.GetByIdAsync(communityId)
+                ?? throw new KeyNotFoundException($"Guild {communityId} not found.");
+
+            if (community.CreatedByUserId == userId)
+                return;
+
+            var membership = await _communityMemberRepository.GetAsync(userId, communityId);
+            var role = membership?.Role;
+
+            if (string.Equals(role, "owner", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(role, "admin", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            throw new UnauthorizedAccessException("Only guild owners and admins can manage this post.");
+        }
+
         private async Task<Post> GetActivePostAsync(int postId)
         {
             var post = await _postRepository.GetByIdAsync(postId)
@@ -116,16 +136,20 @@ namespace GuildsApp.Application.Services
             return _mapper.Map<IEnumerable<PostDto>>(posts.Where(p => !p.IsDeleted));
         }
 
-        public async Task Pin(int postId)
+        public async Task Pin(int postId, int userId)
         {
             var post = await GetActivePostAsync(postId);
+            await CanManageGuildAsync(post.CommunityId, userId);
+
             post.IsPinned = true;
             await _postRepository.UpdateAsync(post);
         }
 
-        public async Task Unpin(int postId)
+        public async Task Unpin(int postId, int userId)
         {
             var post = await GetActivePostAsync(postId);
+            await CanManageGuildAsync(post.CommunityId, userId);
+
             post.IsPinned = false;
             await _postRepository.UpdateAsync(post);
         }

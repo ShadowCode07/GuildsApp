@@ -15,8 +15,8 @@ namespace GuildsApp.Application.Interfaces
         Task<PostDto> GetPost(int id);
         Task<IEnumerable<PostDto>> GetPostsByGuild(int guild);
         Task<IEnumerable<PostDto>> GetPostsByUser(int userId);
-        Task Pin(int postId);
-        Task Unpin(int postId);
+        Task Pin(int postId, int userId);
+        Task Unpin(int postId, int userId);
         Task UpVote(int postId, int userId);
         Task DownVote(int postId, int userId);
         Task<PostVoteResultDto> Vote(int postId, int userId, sbyte value);

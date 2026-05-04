@@ -161,20 +161,18 @@ namespace GuildsApp.Web.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Pin(int id)
         {
-            await _postService.Pin(id);
+            await _postService.Pin(id, GetUserId());
             return RedirectToAction(nameof(Details), new { id });
         }
 
         [HttpPost]
-        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Unpin(int id)
         {
-            await _postService.Unpin(id);
+            await _postService.Unpin(id, GetUserId());
             return RedirectToAction(nameof(Details), new { id });
         }
 
