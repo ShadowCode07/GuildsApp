@@ -44,6 +44,17 @@ namespace GuildsApp.Application.Services
             await EnsureMemberAsync(communityId, userId);
         }
 
+        private async Task EnsureCanPostAsync(int communityId, int userId)
+        {
+            var community = await _communityRepository.GetByIdAsync(communityId)
+                ?? throw new KeyNotFoundException($"Guild {communityId} not found.");
+
+            if (community.IsArchived)
+                throw new InvalidOperationException("This guild is archived.");
+
+            await EnsureMemberAsync(communityId, userId);
+        }
+
         private async Task CanManageGuildAsync(int communityId, int userId)
         {
             var community = await _communityRepository.GetByIdAsync(communityId)
@@ -77,7 +88,7 @@ namespace GuildsApp.Application.Services
 
         public async Task<PostDto> Write(int userId, CreatePostDto dto)
         {
-            await EnsureMemberAsync(dto.CommunityId, userId);
+            await EnsureCanPostAsync(dto.CommunityId, userId);
 
             var post = _mapper.Map<Post>(dto);
             post.AuthorUserId = userId;

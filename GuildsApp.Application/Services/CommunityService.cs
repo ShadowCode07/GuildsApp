@@ -112,9 +112,15 @@ namespace GuildsApp.Application.Services
             if (community == null)
                 throw new Exception("Guild not found.");
 
+            if (community.IsArchived)
+                throw new Exception("This guild is archived.");
+
             var exists = await _communityMemberRepository.IsMemberAsync(userId, communityId);
             if (exists)
                 throw new Exception("You are already a member of this guild.");
+
+            if (community.IsPrivate)
+                throw new Exception("This guild is private.");
 
             await _communityMemberRepository.AddAsync(new CommunityMember
             {

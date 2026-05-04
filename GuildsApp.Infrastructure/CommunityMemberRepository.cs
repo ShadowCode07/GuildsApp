@@ -40,7 +40,7 @@ namespace GuildsApp.Infrastructure
         public async Task<IReadOnlyList<CommunityMember>?> GetByCommunityAsync(int communityId)
         {
             using var conn = CreateConnection();
-            var sql = "SELECT * FROM FROM [CommunityMember] WHERE [CommunityId] = @CommunityId AND [IsBanned] = 0";
+            var sql = "SELECT * FROM [CommunityMember] WHERE [CommunityId] = @CommunityId AND [IsBanned] = 0";
             var result = await conn.QueryAsync<CommunityMember>(sql, new { CommunityId = communityId });
             
             return result.ToList();
@@ -49,7 +49,7 @@ namespace GuildsApp.Infrastructure
         public async Task<IReadOnlyList<CommunityMember>?> GetByUserAsync(int userId)
         {
             using var conn = CreateConnection();
-            var sql = "SELECT * FROM FROM [CommunityMember] WHERE [UserId] = @UserId AND [IsBanned] = 0";
+            var sql = "SELECT * FROM [CommunityMember] WHERE [UserId] = @UserId AND [IsBanned] = 0";
             var result = await conn.QueryAsync<CommunityMember>(sql, new { UserId = userId });
 
             return result.ToList();

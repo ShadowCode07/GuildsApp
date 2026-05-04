@@ -33,7 +33,7 @@ namespace GuildsApp.Infrastructure
         public async override Task<bool> DeleteAsync(int id)
         {
             using var conn = CreateConnection();
-            var sql = $"UPDATE [{_tableName}] SET [IsDeleted] = 1s WHERE Id = @Id";
+            var sql = $"UPDATE [{_tableName}] SET [IsDeleted] = 1 WHERE Id = @Id";
 
             var rows = await conn.ExecuteAsync(sql, new { Id = id });
             return rows > 0;
