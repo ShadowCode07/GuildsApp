@@ -1,0 +1,77 @@
+@model GuildsApp.Application.DTOs.PostDTOs.PostDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="page-shell post-thread">
+    <div class="post-thread__nav">
+        <a href="/Feed/Index" class="post-thread__back">Back to feed</a>
+    </div>
+
+    <article class="post-thread__post" data-post-id="@Model.Id">
+        <aside class="post-thread__vote" aria-label="Post score">
+            <button type="button"
+                    class="post-card__vote-button post-card__vote-button--up"
+                    data-action="vote"
+                    data-value="1"
+                    aria-label="Upvote">
+                &#9650;
+            </button>
+
+            <div class="post-thread__score">@Model.Score</div>
+
+            <button type="button"
+                    class="post-card__vote-button post-card__vote-button--down"
+                    data-action="vote"
+                    data-value="-1"
+                    aria-label="Downvote">
+                &#9660;
+            </button>
+        </aside>
+
+        <div class="post-thread__main">
+            <div class="post-thread__meta">
+                <span class="tag tag--blue">g/@Model.CommunityId</span>
+                <span>Posted by u/@Model.AuthorUserId</span>
+                <span>&middot;</span>
+                <span>@Model.CreatedAt.ToLocalTime().ToString("g")</span>
+
+                @if (Model.IsPinned)
+                {
+                    <span>&middot;</span>
+                    <span class="tag tag--teal">Pinned</span>
+                }
+            </div>
+
+            <h1 class="post-thread__title">@Model.Title</h1>
+
+            <div class="post-thread__body">@Model.Body</div>
+
+            <div class="post-thread__actions">
+                <a href="#comments" class="post-card__action">Comments</a>
+                <button type="button" class="post-card__action" data-action="share" data-url="/Post/Details/@Model.Id">Share</button>
+
+                @if (Model.UpdatedAt.HasValue)
+                {
+                    <span class="post-thread__edited">Edited @Model.UpdatedAt.Value.ToLocalTime().ToString("g")</span>
+                }
+            </div>
+        </div>
+    </article>
+
+    <section id="comments" class="post-thread__comments">
+        <div class="post-thread__comment-box">
+            <textarea class="form-textarea" rows="4" placeholder="Add a comment"></textarea>
+            <div class="post-thread__comment-actions">
+                <button type="button" class="btn btn--ghost">Cancel</button>
+                <button type="button" class="btn btn--primary">Comment</button>
+            </div>
+        </div>
+
+        <div class="post-thread__empty">
+            <h2 class="post-thread__empty-title">No comments yet</h2>
+            <p class="post-thread__empty-text">Start the conversation under this post.</p>
+        </div>
+    </section>
+</div>
