@@ -21,6 +21,16 @@ namespace GuildsApp.Infrastructure
             return result;
         }
 
+        public async Task<User?> GetByEmail(string email)
+        {
+            using var conn = CreateConnection();
+            var sql = $"SELECT TOP 1 * FROM [{_tableName}] WHERE Email = @Email";
+
+            var result = await conn.QueryFirstOrDefaultAsync<User>(sql, new { Email = email });
+
+            return result;
+        }
+
         public async override Task<IReadOnlyList<User>?> GetAllAsync()
         {
             using var conn = CreateConnection();

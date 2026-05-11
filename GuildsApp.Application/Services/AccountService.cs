@@ -59,18 +59,19 @@ namespace GuildsApp.Application.Services
             return user;
         }
 
-        public async Task<User> LoginAsync(string username, string password)
+        public async Task<User> LoginAsync(string email, string password)
         {
-            var user = await _userRepository.GetByUsername(username);
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+            var user = await _userRepository.GetByEmail(normalizedEmail);
 
             if (user == null)
                 throw new Exception("User not found");
 
             if (user.IsDeleted)
-                throw new Exception("Invalid username or password");
+                throw new Exception("Invalid email or password");
 
             if (!_passwordHasher.VerifyPassword(password, user.PasswordHash))
-                throw new Exception("Invalid username or password");
+                throw new Exception("Invalid email or password");
 
             user.LastLoginAt = DateTime.UtcNow;
             await _userRepository.UpdateAsync(user);
@@ -78,20 +79,29 @@ namespace GuildsApp.Application.Services
             return user;
         }
 
-        public async Task RegisterAsync(string username, string password, string displayName)
+        public async Task RegisterAsync(string username, string email, string password, string displayName)
         {
-            var existingUser = await _userRepository.GetByUsername(username);
+            var normalizedUsername = username.Trim();
+            var normalizedEmail = email.Trim().ToLowerInvariant();
+
+            var existingUser = await _userRepository.GetByUsername(normalizedUsername);
 
             if (existingUser != null)
                 throw new Exception("Username already taken");
+
+            var existingEmail = await _userRepository.GetByEmail(normalizedEmail);
+
+            if (existingEmail != null)
+                throw new Exception("Email already registered");
 
             var hashedPassword = _passwordHasher.Hash(password);
 
             var user = new User
             {
-                Username = username,
+                Username = normalizedUsername,
+                Email = normalizedEmail,
                 PasswordHash = hashedPassword,
-                DisplayName = displayName,
+                DisplayName = displayName.Trim(),
                 CreatedAt = DateTime.UtcNow
             };
 

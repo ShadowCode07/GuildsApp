@@ -38,13 +38,14 @@ namespace GuildsApp.Web.Controllers
 
             try
             {
-                var user = await _accountService.LoginAsync(model.Username, model.Password);
+                var user = await _accountService.LoginAsync(model.Email, model.Password);
 
                 var session = await _accountService.CreateSessionAsync(user.Id, GetClientIp());
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, model.Username),
+                    new Claim(ClaimTypes.Name, user.Username),
+                    new Claim(ClaimTypes.Email, user.Email),
                     new Claim("UserId", user.Id.ToString()),
                     new Claim("Session_Token", session.SessionToken)
                 };
@@ -82,7 +83,7 @@ namespace GuildsApp.Web.Controllers
 
             try
             {
-                await _accountService.RegisterAsync(model.Username, model.Password, model.DisplayName);
+                await _accountService.RegisterAsync(model.Username, model.Email, model.Password, model.DisplayName);
 
                 return RedirectToAction("Login", "Account");
             }

@@ -9,11 +9,11 @@ namespace GuildsApp.Application.Interfaces
 {
     public interface IAccountService
     {
-        Task RegisterAsync(string username, string password, string displayName);
-        Task<User> LoginAsync(string username, string password);
+        Task RegisterAsync(string username, string email, string password, string displayName);
+        Task<User> LoginAsync(string email, string password);
         Task<Session> CreateSessionAsync(int userId, string ipAddress);
         Task RevokeSession(string sessionToken);
-        Task<User> GetByIdAsync(int id);
+        Task<User?> GetByIdAsync(int id);
         Task SoftDeleteAsync(int id);
     }
 }

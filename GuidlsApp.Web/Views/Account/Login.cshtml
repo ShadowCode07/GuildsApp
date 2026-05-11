@@ -19,15 +19,15 @@
             @if (!ViewData.ModelState.IsValid)
             {
                 <div class="form-alert">
-                    @Html.ValidationSummary(excludePropertyErrors: true, message: "Please check your username and password and try again.")
+                    @Html.ValidationSummary(excludePropertyErrors: true, message: "Please check your email and password and try again.")
                 </div>
             }
 
             <form asp-action="Login" method="post" class="auth-form">
                 <div class="form-group">
-                    <label asp-for="Username" class="form-label"></label>
-                    <input asp-for="Username" class="form-input" autocomplete="username" />
-                    <span asp-validation-for="Username" class="form-error"></span>
+                    <label asp-for="Email" class="form-label"></label>
+                    <input asp-for="Email" class="form-input" autocomplete="email" />
+                    <span asp-validation-for="Email" class="form-error"></span>
                 </div>
 
                 <div class="form-group">
