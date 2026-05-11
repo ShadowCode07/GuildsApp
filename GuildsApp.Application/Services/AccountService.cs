@@ -79,6 +79,19 @@ namespace GuildsApp.Application.Services
             return user;
         }
 
+        public async Task<User?> GetByUsernameAsync(string username)
+        {
+            var user = await _userRepository.GetByUsername(username.Trim());
+
+            if (user == null)
+                return null;
+
+            if (user.IsDeleted)
+                return null;
+
+            return user;
+        }
+
         public async Task RegisterAsync(string username, string email, string password, string displayName)
         {
             var normalizedUsername = username.Trim();
@@ -106,6 +119,24 @@ namespace GuildsApp.Application.Services
             };
 
             await _userRepository.CreateAsync(user);
+        }
+
+        public async Task<User> UpdateProfileAsync(int userId, string displayName, string? bio, string? avatarUrl)
+        {
+            var user = await _userRepository.GetByIdAsync(userId);
+
+            if (user == null || user.IsDeleted)
+                throw new Exception("User not found");
+
+            user.DisplayName = displayName.Trim();
+            user.Bio = string.IsNullOrWhiteSpace(bio) ? null : bio.Trim();
+
+            if (!string.IsNullOrWhiteSpace(avatarUrl))
+                user.AvatarUrl = avatarUrl;
+
+            await _userRepository.UpdateAsync(user);
+
+            return user;
         }
 
         public async Task RevokeSession(string sessionToken)

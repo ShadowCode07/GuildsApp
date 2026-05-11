@@ -1,0 +1,79 @@
+@model GuildsApp.Web.Models.Profile.EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit profile";
+}
+
+<div class="page-shell">
+    <section class="section-header">
+        <div>
+            <p class="section-header__eyebrow">Profile settings</p>
+            <h1 class="section-header__title">Edit your profile</h1>
+            <p class="section-header__text">Keep your public name, bio, and profile picture current.</p>
+        </div>
+
+        <a href="/Profile/Index" class="btn btn--ghost">Back to profile</a>
+    </section>
+
+    <section class="form-card profile-edit-card">
+        <div class="form-card__header">
+            <h2 class="form-card__title">Public profile</h2>
+            <p class="form-card__subtitle">Your username is reserved for profile links and post attribution.</p>
+        </div>
+
+        <div class="form-card__body">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="form-alert"></div>
+                <input asp-for="CurrentAvatarUrl" type="hidden" />
+
+                <div class="profile-avatar-field">
+                    <div class="profile-avatar-field__preview">
+                        @if (!string.IsNullOrWhiteSpace(Model.CurrentAvatarUrl))
+                        {
+                            <img src="@Model.CurrentAvatarUrl" alt="" />
+                        }
+                        else
+                        {
+                            <span>@(Model.DisplayName.Length >= 2 ? Model.DisplayName[..2].ToUpper() : "ME")</span>
+                        }
+                    </div>
+
+                    <div class="profile-avatar-field__input">
+                        <label asp-for="AvatarImage" class="form-label">Profile picture</label>
+                        <input asp-for="AvatarImage" type="file" class="form-input profile-file-input" accept="image/jpeg,image/png,image/webp" />
+                        <span asp-validation-for="AvatarImage" class="form-error"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Username" class="form-label"></label>
+                    <input asp-for="Username" class="form-input" readonly />
+                    <input asp-for="Username" type="hidden" />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="DisplayName" class="form-label"></label>
+                    <input asp-for="DisplayName" class="form-input" autocomplete="name" />
+                    <span asp-validation-for="DisplayName" class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Bio" class="form-label"></label>
+                    <textarea asp-for="Bio" class="form-textarea" rows="5"></textarea>
+                    <span asp-validation-for="Bio" class="form-error"></span>
+                </div>
+
+                <div class="form-actions">
+                    <a href="/Profile/Index" class="btn btn--ghost">Cancel</a>
+                    <button type="submit" class="btn btn--primary">Save profile</button>
+                </div>
+            </form>
+        </div>
+    </section>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

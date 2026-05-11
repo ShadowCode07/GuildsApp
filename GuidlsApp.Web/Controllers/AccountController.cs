@@ -50,6 +50,9 @@ namespace GuildsApp.Web.Controllers
                     new Claim("Session_Token", session.SessionToken)
                 };
 
+                if (!string.IsNullOrWhiteSpace(user.AvatarUrl))
+                    claims.Add(new Claim("AvatarUrl", user.AvatarUrl));
+
                 var identity = new ClaimsIdentity(claims, "AuthCookie");
 
                 var principal = new ClaimsPrincipal(identity);

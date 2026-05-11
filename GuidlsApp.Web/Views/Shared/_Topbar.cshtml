@@ -26,10 +26,19 @@
     <div class="topbar__actions">
         @if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            <a href="/Profile/Index" class="avatar avatar--md avatar--blue">
-                @(User.Identity.Name != null && User.Identity.Name.Length >= 2
-                    ? User.Identity.Name.Substring(0, 2).ToUpper()
-                    : "ME")
+            var avatarUrl = User.FindFirst("AvatarUrl")?.Value;
+
+            <a href="/Profile/Index" class="avatar avatar--md avatar--blue topbar__avatar">
+                @if (!string.IsNullOrWhiteSpace(avatarUrl))
+                {
+                    <img src="@avatarUrl" alt="" />
+                }
+                else
+                {
+                    @(User.Identity.Name != null && User.Identity.Name.Length >= 2
+                        ? User.Identity.Name.Substring(0, 2).ToUpper()
+                        : "ME")
+                }
             </a>
 
             <form method="post" action="/Account/Logout" class="topbar__logout">

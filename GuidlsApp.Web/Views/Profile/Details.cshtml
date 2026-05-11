@@ -1,0 +1,59 @@
+@model GuildsApp.Web.Models.Profile.ProfileViewModel
+
+@{
+    ViewData["Title"] = $"Profile - {Model.Username}";
+}
+
+<div class="page-shell profile-page">
+    <section class="profile-header">
+        <div class="profile-header__avatar">
+            @if (!string.IsNullOrWhiteSpace(Model.AvatarUrl))
+            {
+                <img src="@Model.AvatarUrl" alt="" />
+            }
+            else
+            {
+                <span>@Model.Initials</span>
+            }
+        </div>
+
+        <div class="profile-header__main">
+            <p class="profile-header__eyebrow">u/@Model.Username</p>
+            <h1 class="profile-header__title">@Model.DisplayName</h1>
+            <p class="profile-header__meta">Joined @Model.CreatedAt.ToLocalTime().ToString("MMM d, yyyy")</p>
+        </div>
+
+        <div class="profile-header__actions">
+            @if (Model.IsCurrentUser)
+            {
+                <a href="/Profile/Edit" class="btn btn--primary">Edit profile</a>
+            }
+            <a href="/Feed/Index" class="btn btn--ghost">Back to feed</a>
+        </div>
+    </section>
+
+    <div class="profile-grid">
+        <section class="profile-panel">
+            <h2 class="profile-panel__title">About</h2>
+            <p class="profile-panel__text">
+                @(string.IsNullOrWhiteSpace(Model.Bio)
+                    ? "No bio has been added yet."
+                    : Model.Bio)
+            </p>
+        </section>
+
+        <aside class="profile-panel profile-panel--stats">
+            <h2 class="profile-panel__title">Progress</h2>
+
+            <div class="profile-stat">
+                <span class="profile-stat__label">Level</span>
+                <strong class="profile-stat__value">@Model.Level</strong>
+            </div>
+
+            <div class="profile-stat">
+                <span class="profile-stat__label">XP</span>
+                <strong class="profile-stat__value">@Model.XpTotal</strong>
+            </div>
+        </aside>
+    </div>
+</div>

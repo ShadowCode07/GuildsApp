@@ -14,6 +14,8 @@ namespace GuildsApp.Application.Interfaces
         Task<Session> CreateSessionAsync(int userId, string ipAddress);
         Task RevokeSession(string sessionToken);
         Task<User?> GetByIdAsync(int id);
+        Task<User?> GetByUsernameAsync(string username);
+        Task<User> UpdateProfileAsync(int userId, string displayName, string? bio, string? avatarUrl);
         Task SoftDeleteAsync(int id);
     }
 }
