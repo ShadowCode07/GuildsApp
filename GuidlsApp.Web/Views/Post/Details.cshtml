@@ -32,15 +32,13 @@
 
         <div class="post-thread__main">
             <div class="post-thread__meta">
-                <span class="tag tag--blue">g/@Model.CommunityId</span>
-                <span>Posted by u/@Model.AuthorUserId</span>
-                <span>&middot;</span>
-                <span>@Model.CreatedAt.ToLocalTime().ToString("g")</span>
+                Posted by <a href="/u/@Model.AuthorUsername">u/@Model.AuthorUsername</a>
+                in <a href="/g/@Model.CommunitySlug">g/@Model.CommunitySlug</a>
+                <span>&middot; @Model.CreatedAt.ToLocalTime().ToString("g")</span>
 
                 @if (Model.IsPinned)
                 {
-                    <span>&middot;</span>
-                    <span class="tag tag--teal">Pinned</span>
+                    <span class="text-primary fw-500">&middot; Pinned</span>
                 }
             </div>
 
@@ -49,7 +47,7 @@
             <div class="post-thread__body">@Model.Body</div>
 
             <div class="post-thread__actions">
-                <a href="#comments" class="post-card__action">Comments</a>
+                <a href="#comments" class="post-card__action">@Model.CommentCount comments</a>
                 <button type="button" class="post-card__action" data-action="share" data-url="/Post/Details/@Model.Id">Share</button>
 
                 @if (Model.UpdatedAt.HasValue)

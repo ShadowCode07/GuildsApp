@@ -1,11 +1,7 @@
-﻿using AutoMapper;
+using AutoMapper;
 using GuildsApp.Application.DTOs.PostDTOs;
 using GuildsApp.Core.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using GuildsApp.Core.QueryModels;
 
 namespace GuildsApp.Application.MappingProfiles
 {
@@ -14,6 +10,7 @@ namespace GuildsApp.Application.MappingProfiles
         public PostProfile()
         {
             CreateMap<Post, PostDto>();
+            CreateMap<PostDetailsQueryModel, PostDto>();
 
             CreateMap<CreatePostDto, Post>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(_ => DateTime.UtcNow))

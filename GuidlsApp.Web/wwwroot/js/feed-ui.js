@@ -8,18 +8,18 @@
                 return;
             }
 
-            var postCard = button.closest('.post-card');
-            if (!postCard) {
+            var post = button.closest('.post-card, .post-thread__post');
+            if (!post) {
                 return;
             }
 
-            var countElement = postCard.querySelector('.post-card__vote-count');
-            var upButton = postCard.querySelector('.post-card__vote-button--up');
-            var downButton = postCard.querySelector('.post-card__vote-button--down');
-            var postId = parseInt(postCard.dataset.postId, 10);
+            var countElement = post.querySelector('.post-card__vote-count, .post-thread__score');
+            var upButton = post.querySelector('.post-card__vote-button--up');
+            var downButton = post.querySelector('.post-card__vote-button--down');
+            var postId = parseInt(post.dataset.postId, 10);
             var nextVote = parseInt(button.dataset.value, 10);
 
-            if (!postId || !nextVote) {
+            if (!postId || !nextVote || !countElement || !upButton || !downButton) {
                 return;
             }
 

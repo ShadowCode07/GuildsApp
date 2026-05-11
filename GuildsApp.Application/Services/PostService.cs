@@ -131,7 +131,12 @@ namespace GuildsApp.Application.Services
 
         public async Task<PostDto> GetPost(int id)
         {
-            var post = await GetActivePostAsync(id);
+            var post = await _postRepository.GetDetailsByIdAsync(id)
+                ?? throw new KeyNotFoundException($"Post {id} not found.");
+
+            if (post.IsDeleted)
+                throw new InvalidOperationException("Post has been deleted.");
+
             return _mapper.Map<PostDto>(post);
         }
 

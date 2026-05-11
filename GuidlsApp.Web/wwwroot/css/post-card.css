@@ -183,12 +183,21 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     margin-bottom: 12px;
     color: var(--color-text-secondary);
-    font-size: 13px;
-    font-weight: 600;
+    font-size: 14px;
 }
+
+    .post-thread__meta a {
+        color: var(--color-primary);
+        font-weight: 600;
+    }
+
+    .post-thread__meta span {
+        display: inline-flex;
+        align-items: center;
+    }
 
 .post-thread__title {
     margin-bottom: 16px;
